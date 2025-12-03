@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
       enforce: "pre" as const,
       ...mdx({ 
         remarkPlugins: [remarkGfm],
-        jsx: true,
+        providerImportSource: "@mdx-js/react",
       }),
     } as Plugin,
     react(),

@@ -17,15 +17,75 @@ export interface Book {
 export const books: Book[] = [
   {
     id: 1,
+    slug: "the-phoenix-project",
+    title: "The Phoenix Project",
+    author: "Gene Kim, Kevin Behr & George Spafford",
+    color: "from-orange-600 via-red-600 to-orange-800",
+    month: "Jan 2025",
+    genre: "Business Fiction",
+    pageCount: 382,
+    readerCount: 18,
+    isCurrent: true,
+    description: "A novel about IT, DevOps, and helping your business win. Bill Palmer is an IT manager who is suddenly promoted to VP of IT Operations when his predecessor is unexpectedly fired. The company is in crisis: a critical initiative called Phoenix is massively over budget and behind schedule. Bill must save the project and transform how IT operates using manufacturing principles that revolutionize how we think about technology work.",
+    discussionQuestions: [
+      "How does the story illustrate the connection between IT work and manufacturing principles?",
+      "What parallels do you see between the Four Types of Work and your own experience?",
+      "How did the relationship between IT and the business change throughout the book?",
+      "What lessons about constraints and bottlenecks resonated most with you?"
+    ],
+    meetingDate: "January 18, 2025"
+  },
+  {
+    id: 2,
+    slug: "how-google-works",
+    title: "How Google Works",
+    author: "Eric Schmidt & Jonathan Rosenberg",
+    color: "from-blue-500 via-green-500 to-yellow-500",
+    month: "Dec 2024",
+    genre: "Business & Technology",
+    pageCount: 305,
+    readerCount: 22,
+    isCurrent: false,
+    description: "Google Executive Chairman and former CEO Eric Schmidt and former SVP of Products Jonathan Rosenberg share the lessons they learned while helping to build one of the most successful companies of our time. From corporate culture to strategy, talent to decision-making, this book reveals the inner workings of one of the world's most innovative companies and provides a framework for success in the new technological age.",
+    discussionQuestions: [
+      "How does Google's approach to hiring 'smart creatives' differ from traditional hiring?",
+      "What aspects of Google's culture could be applied to other organizations?",
+      "How has Google balanced innovation with business sustainability?",
+      "What surprised you most about Google's management philosophy?"
+    ],
+    meetingDate: "December 15, 2024"
+  },
+  {
+    id: 3,
+    slug: "refactoring-ui",
+    title: "Refactoring UI",
+    author: "Adam Wathan & Steve Schoger",
+    color: "from-violet-600 via-purple-600 to-indigo-700",
+    month: "Nov 2024",
+    genre: "Design & Development",
+    pageCount: 252,
+    readerCount: 27,
+    isCurrent: false,
+    description: "Learn how to design beautiful user interfaces by yourself using specific tactics explained from a developer's point-of-view. This isn't a book about design theory or principles—it's a collection of specific, actionable tips for improving your designs. Whether you're a developer who wants to create better-looking interfaces or a designer looking for practical techniques, this book provides concrete strategies for spacing, color, typography, hierarchy, and more.",
+    discussionQuestions: [
+      "Which design tactics have you already started applying to your projects?",
+      "How does thinking about design 'systematically' change your approach?",
+      "What was the most surprising insight about visual hierarchy?",
+      "How can developers and designers better collaborate using these principles?"
+    ],
+    meetingDate: "November 20, 2024"
+  },
+  {
+    id: 4,
     slug: "the-house-of-spirits",
     title: "The House of Spirits",
     author: "Isabel Allende",
     color: "from-primary via-primary to-forest-light",
-    month: "Dec 2024",
+    month: "Oct 2024",
     genre: "Magical Realism",
     pageCount: 433,
     readerCount: 24,
-    isCurrent: true,
+    isCurrent: false,
     description: "A sweeping multigenerational saga that weaves together the personal and political, the magical and the mundane. Through the eyes of the Trueba family, Allende paints a vivid portrait of love, ambition, and the indomitable spirit of women across generations. Set against the backdrop of social and political upheaval in an unnamed Latin American country, this novel explores themes of fate, memory, and the bonds that tie families together through joy and tragedy alike.",
     discussionQuestions: [
       "How does Allende use magical realism to enhance the story's emotional impact?",
@@ -33,15 +93,15 @@ export const books: Book[] = [
       "How does the political backdrop influence the characters' personal journeys?",
       "In what ways does Clara's silence serve as both protest and protection?"
     ],
-    meetingDate: "December 15, 2024"
+    meetingDate: "October 15, 2024"
   },
   {
-    id: 2,
+    id: 5,
     slug: "circe",
     title: "Circe",
     author: "Madeline Miller",
     color: "from-amber-700 to-amber-900",
-    month: "Nov 2024",
+    month: "Sep 2024",
     genre: "Mythological Fiction",
     pageCount: 393,
     readerCount: 31,
@@ -53,15 +113,15 @@ export const books: Book[] = [
       "How does Miller reimagine the traditional portrayal of Circe from The Odyssey?",
       "What does the novel say about the nature of immortality versus mortality?"
     ],
-    meetingDate: "November 15, 2024"
+    meetingDate: "September 15, 2024"
   },
   {
-    id: 3,
+    id: 6,
     slug: "beloved",
     title: "Beloved",
     author: "Toni Morrison",
     color: "from-rose-800 to-rose-950",
-    month: "Oct 2024",
+    month: "Aug 2024",
     genre: "Literary Fiction",
     pageCount: 324,
     readerCount: 28,
@@ -73,15 +133,15 @@ export const books: Book[] = [
       "How does memory function as both burden and necessity in the story?",
       "What role does community play in the characters' healing process?"
     ],
-    meetingDate: "October 20, 2024"
+    meetingDate: "August 20, 2024"
   },
   {
-    id: 4,
+    id: 7,
     slug: "the-secret-history",
     title: "The Secret History",
     author: "Donna Tartt",
     color: "from-slate-700 to-slate-900",
-    month: "Sep 2024",
+    month: "Jul 2024",
     genre: "Dark Academia",
     pageCount: 559,
     readerCount: 35,
@@ -93,67 +153,7 @@ export const books: Book[] = [
       "How does Richard's outsider status affect his reliability as a narrator?",
       "What role does Greek philosophy play in the characters' justifications?"
     ],
-    meetingDate: "September 18, 2024"
-  },
-  {
-    id: 5,
-    slug: "one-hundred-years-of-solitude",
-    title: "One Hundred Years of Solitude",
-    author: "Gabriel García Márquez",
-    color: "from-emerald-700 to-emerald-900",
-    month: "Aug 2024",
-    genre: "Magical Realism",
-    pageCount: 417,
-    readerCount: 29,
-    isCurrent: false,
-    description: "The brilliant, bestselling, landmark novel that tells the story of the Buendía family, and chronicles the irreconcilable conflict between the desire for solitude and the need for love. Deeply rooted in the mythology and superstitions of Latin America, this masterpiece blurs the distinction between reality and fantasy.",
-    discussionQuestions: [
-      "How does the cyclical nature of time function in the narrative?",
-      "What significance do the recurring names hold for the Buendía family?",
-      "How does Márquez blend the magical with the mundane so seamlessly?",
-      "What does Macondo represent as both a physical and metaphorical space?"
-    ],
-    meetingDate: "August 22, 2024"
-  },
-  {
-    id: 6,
-    slug: "the-remains-of-the-day",
-    title: "The Remains of the Day",
-    author: "Kazuo Ishiguro",
-    color: "from-stone-600 to-stone-800",
-    month: "Jul 2024",
-    genre: "Literary Fiction",
-    pageCount: 258,
-    readerCount: 26,
-    isCurrent: false,
-    description: "A profoundly compelling portrait of the perfect English butler and of his fading, insular world in postwar England. Stevens, the butler, embarks on a journey that leads him to confront the reality of his life, his profession, and his country.",
-    discussionQuestions: [
-      "How does Stevens' definition of dignity shape his life choices?",
-      "What does the novel say about repressed emotion and its consequences?",
-      "How does Ishiguro use the English landscape as a reflection of Stevens' inner world?",
-      "What role does regret play in the narrative's emotional impact?"
-    ],
-    meetingDate: "July 17, 2024"
-  },
-  {
-    id: 7,
-    slug: "pachinko",
-    title: "Pachinko",
-    author: "Min Jin Lee",
-    color: "from-indigo-700 to-indigo-900",
-    month: "Jun 2024",
-    genre: "Historical Fiction",
-    pageCount: 490,
-    readerCount: 33,
-    isCurrent: false,
-    description: "Pachinko follows one Korean family through the generations, beginning in early 1900s Korea with Sunja, the prized daughter of a poor yet proud family, whose unplanned pregnancy threatens to shame them all. Deserted by her wealthy lover, Sunja is saved when a young tubercular minister offers to marry and take her to Japan.",
-    discussionQuestions: [
-      "How does the novel explore themes of identity and belonging?",
-      "What role does discrimination play in shaping the characters' choices?",
-      "How do generational differences affect the family's relationship with their heritage?",
-      "What does the pachinko parlor symbolize in the context of the story?"
-    ],
-    meetingDate: "June 19, 2024"
+    meetingDate: "July 18, 2024"
   }
 ];
 
