@@ -1,15 +1,33 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, BookOpen, Calendar, Users, ChevronRight, ChevronLeft } from "lucide-react";
+import { MDXProvider } from "@mdx-js/react";
+import { Suspense, lazy, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { getBookBySlug, getAllBooks } from "@/data/books";
+import { getBookStats } from "@/data/bookStats";
+import { mdxComponents } from "@/components/mdx/MDXComponents";
+import BookStats from "@/components/BookStats";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+// Dynamic MDX content loader
+const mdxModules = import.meta.glob("../content/books/*.mdx");
 
 const BookDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const book = getBookBySlug(slug || "");
+  const stats = getBookStats(slug || "");
   const allBooks = getAllBooks();
+
+  // Dynamically load MDX content
+  const MDXContent = useMemo(() => {
+    if (!slug) return null;
+    const modulePath = `../content/books/${slug}.mdx`;
+    if (mdxModules[modulePath]) {
+      return lazy(mdxModules[modulePath] as () => Promise<{ default: React.ComponentType }>);
+    }
+    return null;
+  }, [slug]);
 
   if (!book) {
     return (
@@ -18,7 +36,7 @@ const BookDetail = () => {
         <main className="pt-32 pb-24">
           <div className="container mx-auto px-6 text-center">
             <h1 className="font-serif text-4xl text-foreground mb-4">Book Not Found</h1>
-            <p className="text-muted-foreground mb-8">The book you're looking for doesn't exist.</p>
+            <p className="text-muted-foreground mb-8">The book you are looking for does not exist.</p>
             <Link to="/books">
               <Button variant="literary">Browse All Books</Button>
             </Link>
@@ -128,36 +146,38 @@ const BookDetail = () => {
           </div>
         </section>
 
-        {/* Discussion Questions */}
-        <section className="py-16 bg-cream-dark/50">
-          <div className="container mx-auto px-6">
-            <div className="max-w-3xl mx-auto">
-              <p className="small-caps text-sm tracking-[0.3em] text-accent mb-3 text-center">
-                For Your Book Club
-              </p>
-              <h2 className="font-serif text-3xl md:text-4xl font-medium text-foreground mb-8 text-center">
-                Discussion Questions
-              </h2>
-
-              <Accordion type="single" collapsible className="w-full">
-                {book.discussionQuestions.map((question, index) => (
-                  <AccordionItem key={index} value={`question-${index}`} className="border-border">
-                    <AccordionTrigger className="font-serif text-left text-foreground hover:text-primary hover:no-underline py-6">
-                      <span className="flex items-start gap-4">
-                        <span className="text-accent small-caps text-sm mt-0.5">Q{index + 1}</span>
-                        <span>{question}</span>
-                      </span>
-                    </AccordionTrigger>
-                    <AccordionContent className="font-body text-muted-foreground pl-10">
-                      Take time to reflect on this question and share your thoughts with the group. 
-                      Consider specific passages or moments from the book that informed your perspective.
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+        {/* Stats Section */}
+        {stats && (
+          <section className="py-12 bg-cream-dark/30">
+            <div className="container mx-auto px-6">
+              <div className="max-w-3xl mx-auto">
+                <BookStats stats={stats} bookTitle={book.title} />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
+
+        {/* MDX Content Section */}
+        {MDXContent && (
+          <section className="py-16">
+            <div className="container mx-auto px-6">
+              <div className="max-w-3xl mx-auto prose-custom">
+                <MDXProvider components={mdxComponents}>
+                  <Suspense fallback={
+                    <div className="animate-pulse space-y-4">
+                      <div className="h-8 bg-muted rounded w-3/4"></div>
+                      <div className="h-4 bg-muted rounded w-full"></div>
+                      <div className="h-4 bg-muted rounded w-5/6"></div>
+                      <div className="h-4 bg-muted rounded w-4/5"></div>
+                    </div>
+                  }>
+                    <MDXContent />
+                  </Suspense>
+                </MDXProvider>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Navigation */}
         <section className="py-12 border-t border-border">
