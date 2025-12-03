@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Camera, MapPin, Calendar, Users, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Lightbox from "@/components/Lightbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getAllEvents, BookEvent } from "@/data/events";
+import { getAllEvents, BookEvent, EventPhoto } from "@/data/events";
 import { getBookBySlug } from "@/data/books";
 
 const fadeInUp = {
@@ -33,7 +34,13 @@ const photoVariants = {
   }
 };
 
-const EventCard = ({ event, index }: { event: BookEvent; index: number }) => {
+interface EventCardProps {
+  event: BookEvent;
+  index: number;
+  onPhotoClick: (photos: EventPhoto[], index: number) => void;
+}
+
+const EventCard = ({ event, index, onPhotoClick }: EventCardProps) => {
   const book = getBookBySlug(event.bookSlug);
   
   return (
@@ -110,6 +117,7 @@ const EventCard = ({ event, index }: { event: BookEvent; index: number }) => {
               variants={photoVariants}
               transition={{ delay: photoIndex * 0.08 }}
               whileHover={{ scale: 1.02 }}
+              onClick={() => onPhotoClick(event.photos, photoIndex)}
             >
               <div className={`${photo.featured ? "aspect-[4/3]" : "aspect-square"}`}>
                 <img 
@@ -119,6 +127,11 @@ const EventCard = ({ event, index }: { event: BookEvent; index: number }) => {
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="bg-background/20 backdrop-blur-sm text-primary-foreground px-4 py-2 rounded-full text-sm font-medium">
+                    View
+                  </span>
+                </div>
                 {photo.caption && (
                   <p className="absolute bottom-4 left-4 right-4 text-primary-foreground font-body">
                     {photo.caption}
@@ -233,6 +246,17 @@ const EventCard = ({ event, index }: { event: BookEvent; index: number }) => {
 const Events = () => {
   const location = useLocation();
   const events = getAllEvents();
+  
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxPhotos, setLightboxPhotos] = useState<EventPhoto[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const handlePhotoClick = (photos: EventPhoto[], index: number) => {
+    setLightboxPhotos(photos);
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
 
   // Scroll to hash on load
   useEffect(() => {
@@ -305,7 +329,12 @@ const Events = () => {
           <div className="container mx-auto px-6 lg:px-8">
             <div className="space-y-12">
               {events.map((event, index) => (
-                <EventCard key={event.id} event={event} index={index} />
+                <EventCard 
+                  key={event.id} 
+                  event={event} 
+                  index={index} 
+                  onPhotoClick={handlePhotoClick}
+                />
               ))}
             </div>
 
@@ -326,6 +355,14 @@ const Events = () => {
         </section>
       </main>
       <Footer />
+
+      {/* Lightbox */}
+      <Lightbox
+        photos={lightboxPhotos}
+        initialIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
     </div>
   );
 };
