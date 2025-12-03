@@ -66,15 +66,23 @@ const Books = () => {
                     <div className="relative bg-primary/5 p-8 flex items-center justify-center">
                       <div className="relative">
                         <div className="absolute inset-0 bg-foreground/10 rounded-lg transform translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform" />
-                        <div className={`relative w-36 h-52 bg-gradient-to-br ${currentBook.color} rounded-lg shadow-card flex items-center justify-center`}>
-                          <div className="text-center px-4">
-                            <div className="w-8 h-0.5 bg-accent mx-auto mb-3" />
-                            <h3 className="font-serif text-sm text-primary-foreground leading-tight">
-                              {currentBook.title}
-                            </h3>
-                            <div className="w-8 h-0.5 bg-accent mx-auto mt-3" />
+                        {currentBook.coverImage ? (
+                          <img 
+                            src={currentBook.coverImage} 
+                            alt={`${currentBook.title} cover`}
+                            className="relative w-36 h-52 rounded-lg shadow-card object-cover"
+                          />
+                        ) : (
+                          <div className={`relative w-36 h-52 bg-gradient-to-br ${currentBook.color} rounded-lg shadow-card flex items-center justify-center`}>
+                            <div className="text-center px-4">
+                              <div className="w-8 h-0.5 bg-accent mx-auto mb-3" />
+                              <h3 className="font-serif text-sm text-primary-foreground leading-tight">
+                                {currentBook.title}
+                              </h3>
+                              <div className="w-8 h-0.5 bg-accent mx-auto mt-3" />
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
 
@@ -201,15 +209,23 @@ const Books = () => {
                     <div className="flex justify-center mb-6">
                       <div className="relative">
                         <div className="absolute inset-0 bg-foreground/10 rounded-lg transform translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform" />
-                        <div className={`relative w-32 h-44 bg-gradient-to-br ${book.color} rounded-lg shadow-card flex items-center justify-center`}>
-                          <div className="text-center px-3">
-                            <div className="w-6 h-0.5 bg-white/30 mx-auto mb-2" />
-                            <h4 className="font-serif text-xs text-white leading-tight">
-                              {book.title}
-                            </h4>
-                            <div className="w-6 h-0.5 bg-white/30 mx-auto mt-2" />
+                        {book.coverImage ? (
+                          <img 
+                            src={book.coverImage} 
+                            alt={`${book.title} cover`}
+                            className="relative w-32 h-44 rounded-lg shadow-card object-cover"
+                          />
+                        ) : (
+                          <div className={`relative w-32 h-44 bg-gradient-to-br ${book.color} rounded-lg shadow-card flex items-center justify-center`}>
+                            <div className="text-center px-3">
+                              <div className="w-6 h-0.5 bg-white/30 mx-auto mb-2" />
+                              <h4 className="font-serif text-xs text-white leading-tight">
+                                {book.title}
+                              </h4>
+                              <div className="w-6 h-0.5 bg-white/30 mx-auto mt-2" />
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
 

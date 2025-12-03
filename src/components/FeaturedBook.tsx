@@ -31,21 +31,29 @@ const FeaturedBook = () => {
                   {/* Book shadow */}
                   <div className="absolute inset-0 bg-foreground/10 rounded-lg transform translate-x-3 translate-y-3 group-hover:translate-x-4 group-hover:translate-y-4 transition-transform" />
                   {/* Book cover */}
-                  <div className={`relative w-48 md:w-56 h-72 md:h-80 bg-gradient-to-br ${book.color} rounded-lg shadow-elevated flex items-center justify-center`}>
-                    <div className="text-center px-6">
-                      <div className="w-12 h-0.5 bg-accent mx-auto mb-4" />
-                      <h3 className="font-serif text-xl text-primary-foreground leading-tight mb-2">
-                        {book.title.split(' ').slice(0, -1).join(' ')}
-                      </h3>
-                      <h3 className="font-serif text-2xl text-accent font-semibold leading-tight">
-                        {book.title.split(' ').slice(-1)}
-                      </h3>
-                      <div className="w-12 h-0.5 bg-accent mx-auto mt-4" />
-                      <p className="font-body text-sm text-primary-foreground/80 mt-4 italic">
-                        {book.author}
-                      </p>
+                  {book.coverImage ? (
+                    <img 
+                      src={book.coverImage} 
+                      alt={`${book.title} cover`}
+                      className="relative w-48 md:w-56 h-72 md:h-80 rounded-lg shadow-elevated object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className={`relative w-48 md:w-56 h-72 md:h-80 bg-gradient-to-br ${book.color} rounded-lg shadow-elevated flex items-center justify-center`}>
+                      <div className="text-center px-6">
+                        <div className="w-12 h-0.5 bg-accent mx-auto mb-4" />
+                        <h3 className="font-serif text-xl text-primary-foreground leading-tight mb-2">
+                          {book.title.split(' ').slice(0, -1).join(' ')}
+                        </h3>
+                        <h3 className="font-serif text-2xl text-accent font-semibold leading-tight">
+                          {book.title.split(' ').slice(-1)}
+                        </h3>
+                        <div className="w-12 h-0.5 bg-accent mx-auto mt-4" />
+                        <p className="font-body text-sm text-primary-foreground/80 mt-4 italic">
+                          {book.author}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </Link>
 

@@ -77,21 +77,29 @@ const BookDetail = () => {
               <div className="lg:col-span-2 flex justify-center lg:justify-end lg:sticky lg:top-28">
                 <div className="relative">
                   <div className="absolute inset-0 bg-foreground/8 rounded-xl transform translate-x-4 translate-y-4" />
-                  <div className={`relative w-56 md:w-64 h-80 md:h-96 bg-gradient-to-br ${book.color} rounded-xl shadow-elevated flex items-center justify-center`}>
-                    <div className="text-center px-6">
-                      <div className="w-14 h-0.5 bg-accent mx-auto mb-5" />
-                      <h1 className="font-serif text-xl md:text-2xl text-primary-foreground leading-tight mb-1">
-                        {book.title.split(' ').slice(0, -1).join(' ')}
-                      </h1>
-                      <h1 className="font-serif text-xl md:text-2xl text-accent font-semibold leading-tight">
-                        {book.title.split(' ').slice(-1)}
-                      </h1>
-                      <div className="w-14 h-0.5 bg-accent mx-auto mt-5" />
-                      <p className="font-body text-sm text-primary-foreground/80 mt-5 italic">
-                        {book.author}
-                      </p>
+                  {book.coverImage ? (
+                    <img 
+                      src={book.coverImage} 
+                      alt={`${book.title} cover`}
+                      className="relative w-56 md:w-64 h-80 md:h-96 rounded-xl shadow-elevated object-cover"
+                    />
+                  ) : (
+                    <div className={`relative w-56 md:w-64 h-80 md:h-96 bg-gradient-to-br ${book.color} rounded-xl shadow-elevated flex items-center justify-center`}>
+                      <div className="text-center px-6">
+                        <div className="w-14 h-0.5 bg-accent mx-auto mb-5" />
+                        <h1 className="font-serif text-xl md:text-2xl text-primary-foreground leading-tight mb-1">
+                          {book.title.split(' ').slice(0, -1).join(' ')}
+                        </h1>
+                        <h1 className="font-serif text-xl md:text-2xl text-accent font-semibold leading-tight">
+                          {book.title.split(' ').slice(-1)}
+                        </h1>
+                        <div className="w-14 h-0.5 bg-accent mx-auto mt-5" />
+                        <p className="font-body text-sm text-primary-foreground/80 mt-5 italic">
+                          {book.author}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 

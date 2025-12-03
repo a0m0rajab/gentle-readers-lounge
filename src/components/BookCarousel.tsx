@@ -64,15 +64,23 @@ const BookCarousel = () => {
                 {/* Book Cover */}
                 <div className="relative mb-4">
                   <div className="absolute inset-0 bg-foreground/10 rounded-lg transform translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-300" />
-                  <div className={`relative w-full h-64 md:h-72 bg-gradient-to-br ${book.color} rounded-lg shadow-card group-hover:shadow-elevated transition-all duration-300 flex items-center justify-center p-4`}>
-                    <div className="text-center">
-                      <div className="w-8 h-0.5 bg-white/30 mx-auto mb-3" />
-                      <h4 className="font-serif text-sm md:text-base text-white leading-tight mb-1">
-                        {book.title}
-                      </h4>
-                      <div className="w-8 h-0.5 bg-white/30 mx-auto mt-3" />
+                  {book.coverImage ? (
+                    <img 
+                      src={book.coverImage} 
+                      alt={`${book.title} cover`}
+                      className="relative w-full h-64 md:h-72 rounded-lg shadow-card group-hover:shadow-elevated transition-all duration-300 object-cover"
+                    />
+                  ) : (
+                    <div className={`relative w-full h-64 md:h-72 bg-gradient-to-br ${book.color} rounded-lg shadow-card group-hover:shadow-elevated transition-all duration-300 flex items-center justify-center p-4`}>
+                      <div className="text-center">
+                        <div className="w-8 h-0.5 bg-white/30 mx-auto mb-3" />
+                        <h4 className="font-serif text-sm md:text-base text-white leading-tight mb-1">
+                          {book.title}
+                        </h4>
+                        <div className="w-8 h-0.5 bg-white/30 mx-auto mt-3" />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Book Info */}
