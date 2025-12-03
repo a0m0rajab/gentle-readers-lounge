@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Heart, Users, Sparkles } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ContactForm from "@/components/ContactForm";
 
 const foundingMembers = [
   {
@@ -296,6 +297,41 @@ const About = () => {
                 </motion.div>
               ))}
             </motion.div>
+          </div>
+        </section>
+
+        {/* Contact Form Section */}
+        <section className="py-16 md:py-24">
+          <div className="container mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto items-start">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <span className="text-accent font-body text-sm tracking-widest uppercase">
+                  Reach Out
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl text-foreground mt-4 mb-4">
+                  Questions?
+                </h2>
+                <p className="font-body text-muted-foreground leading-relaxed mb-6">
+                  Whether you're curious about our book selections, events, or membership options, 
+                  we're here to help. Send us a message and a founding member will get back to you.
+                </p>
+                <div className="literary-divider" />
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <ContactForm />
+              </motion.div>
+            </div>
           </div>
         </section>
 

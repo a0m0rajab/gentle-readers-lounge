@@ -1,5 +1,6 @@
 import { BookOpen, Heart, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import NewsletterSignup from "./NewsletterSignup";
 
 const Footer = () => {
   const socialLinks = [
@@ -57,22 +58,25 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Newsletter */}
           <div>
-            <h4 className="font-serif text-sm small-caps tracking-widest mb-4 text-primary-foreground/80">
-              Connect With Us
-            </h4>
-            <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  className="w-10 h-10 rounded-lg border border-primary-foreground/20 flex items-center justify-center text-primary-foreground/70 hover:text-primary-foreground hover:border-primary-foreground/40 hover:bg-primary-foreground/5 transition-all duration-300"
-                  aria-label={social.name}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+            <NewsletterSignup />
+            
+            {/* Social */}
+            <div className="mt-6 pt-6 border-t border-primary-foreground/10">
+              <p className="font-body text-xs text-primary-foreground/60 mb-3">Follow us</p>
+              <div className="flex gap-3">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    className="w-9 h-9 rounded-lg border border-primary-foreground/20 flex items-center justify-center text-primary-foreground/70 hover:text-primary-foreground hover:border-primary-foreground/40 hover:bg-primary-foreground/5 transition-all duration-300"
+                    aria-label={social.name}
+                  >
+                    <social.icon className="w-4 h-4" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
