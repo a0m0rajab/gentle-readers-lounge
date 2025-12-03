@@ -1,15 +1,18 @@
 import { BookOpen, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: "Current Read", href: "#current" },
-    { label: "Past Reads", href: "#past-reads" },
-    { label: "Schedule", href: "#schedule" },
+    { label: "Home", href: isHomePage ? "#home" : "/", isAnchor: isHomePage },
+    { label: "Current Read", href: isHomePage ? "#current" : "/#current", isAnchor: isHomePage },
+    { label: "Library", href: "/books", isAnchor: false },
+    { label: "Schedule", href: isHomePage ? "#schedule" : "/#schedule", isAnchor: isHomePage },
   ];
 
   return (
@@ -17,7 +20,7 @@ const Header = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-soft group-hover:shadow-card transition-shadow duration-300">
               <BookOpen className="w-5 h-5 text-primary-foreground" />
             </div>
@@ -29,18 +32,28 @@ const Header = () => {
                 Book Club
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="font-body text-muted-foreground hover:text-foreground gold-underline transition-colors duration-300"
-              >
-                {link.label}
-              </a>
+              link.isAnchor ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="font-body text-muted-foreground hover:text-foreground gold-underline transition-colors duration-300"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="font-body text-muted-foreground hover:text-foreground gold-underline transition-colors duration-300"
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
             <Button variant="literary" size="sm">
               Join Us
@@ -62,14 +75,25 @@ const Header = () => {
           <nav className="md:hidden pt-4 pb-2 border-t border-border mt-4 animate-fade-up">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="font-body text-muted-foreground hover:text-foreground transition-colors py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
+                link.isAnchor ? (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="font-body text-muted-foreground hover:text-foreground transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className="font-body text-muted-foreground hover:text-foreground transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
               <Button variant="literary" className="mt-2">
                 Join Us

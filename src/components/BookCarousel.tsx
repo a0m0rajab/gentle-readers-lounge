@@ -1,27 +1,13 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState } from "react";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  color: string;
-  month: string;
-}
-
-const books: Book[] = [
-  { id: 1, title: "Circe", author: "Madeline Miller", color: "from-amber-700 to-amber-900", month: "Nov 2024" },
-  { id: 2, title: "Beloved", author: "Toni Morrison", color: "from-rose-800 to-rose-950", month: "Oct 2024" },
-  { id: 3, title: "The Secret History", author: "Donna Tartt", color: "from-slate-700 to-slate-900", month: "Sep 2024" },
-  { id: 4, title: "One Hundred Years of Solitude", author: "Gabriel García Márquez", color: "from-emerald-700 to-emerald-900", month: "Aug 2024" },
-  { id: 5, title: "The Remains of the Day", author: "Kazuo Ishiguro", color: "from-stone-600 to-stone-800", month: "Jul 2024" },
-  { id: 6, title: "Pachinko", author: "Min Jin Lee", color: "from-indigo-700 to-indigo-900", month: "Jun 2024" },
-];
+import { Link } from "react-router-dom";
+import { getPastReads } from "@/data/books";
 
 const BookCarousel = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const books = getPastReads();
 
   const checkScroll = () => {
     if (scrollRef.current) {
@@ -85,8 +71,9 @@ const BookCarousel = () => {
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {books.map((book, index) => (
-            <div
+            <Link
               key={book.id}
+              to={`/book/${book.slug}`}
               className="flex-shrink-0 snap-start group cursor-pointer"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -120,19 +107,19 @@ const BookCarousel = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         {/* View All Link */}
         <div className="text-center mt-12">
-          <a
-            href="#"
+          <Link
+            to="/books"
             className="font-body text-muted-foreground hover:text-foreground gold-underline transition-colors inline-flex items-center gap-2"
           >
             View complete reading history
             <ChevronRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

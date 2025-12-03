@@ -1,4 +1,5 @@
 import { BookOpen, Heart, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const socialLinks = [
@@ -9,10 +10,10 @@ const Footer = () => {
   ];
 
   const footerLinks = [
-    { label: "About Us", href: "#" },
-    { label: "Reading Guidelines", href: "#" },
-    { label: "Book Nominations", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "About Us", href: "/about" },
+    { label: "Library", href: "/books" },
+    { label: "Book Nominations", href: "/nominate" },
+    { label: "Contact", href: "/contact" },
   ];
 
   return (
@@ -21,7 +22,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-12 md:gap-8 mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <Link to="/" className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-primary-foreground" />
               </div>
@@ -30,7 +31,7 @@ const Footer = () => {
                   The Gentle Readers
                 </span>
               </div>
-            </div>
+            </Link>
             <p className="font-body text-primary-foreground/70 text-sm leading-relaxed max-w-xs">
               A community of passionate readers exploring literature together, 
               one page at a time.
@@ -45,12 +46,12 @@ const Footer = () => {
             <ul className="space-y-2">
               {footerLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="font-body text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
