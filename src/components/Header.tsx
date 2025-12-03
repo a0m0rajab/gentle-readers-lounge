@@ -13,7 +13,7 @@ const Header = () => {
     { label: "Current Read", href: isHomePage ? "#current" : "/#current", isAnchor: isHomePage },
     { label: "Library", href: "/books", isAnchor: false },
     { label: "Events", href: "/events", isAnchor: false },
-    { label: "Schedule", href: isHomePage ? "#schedule" : "/#schedule", isAnchor: isHomePage },
+    { label: "About", href: "/about", isAnchor: false },
   ];
 
   return (
