@@ -5,8 +5,10 @@ import { Suspense, lazy, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { getBookBySlug, getAllBooks } from "@/data/books";
 import { getBookStats } from "@/data/bookStats";
+import { getEventByBookSlug } from "@/data/events";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import BookStats from "@/components/BookStats";
+import EventGallery from "@/components/EventGallery";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -17,6 +19,7 @@ const BookDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const book = getBookBySlug(slug || "");
   const stats = getBookStats(slug || "");
+  const event = getEventByBookSlug(slug || "");
   const allBooks = getAllBooks();
 
   // Dynamically load MDX content
@@ -153,6 +156,17 @@ const BookDetail = () => {
             <div className="container mx-auto px-6 lg:px-8">
               <div className="max-w-4xl mx-auto">
                 <BookStats stats={stats} bookTitle={book.title} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Event Gallery Section */}
+        {event && (
+          <section className="py-16 md:py-20 bg-muted/30">
+            <div className="container mx-auto px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto">
+                <EventGallery event={event} compact={true} />
               </div>
             </div>
           </section>
