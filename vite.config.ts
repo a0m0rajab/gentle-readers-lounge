@@ -15,7 +15,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     {
       enforce: "pre" as const,
-      ...mdx({ remarkPlugins: [remarkGfm] }),
+      ...mdx({ 
+        remarkPlugins: [remarkGfm],
+        providerImportSource: "@mdx-js/react",
+      }),
     } as Plugin,
     react(),
     mode === "development" && componentTagger(),
