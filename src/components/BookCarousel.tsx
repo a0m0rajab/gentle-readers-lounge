@@ -29,12 +29,12 @@ const BookCarousel = () => {
   };
 
   return (
-    <section id="past-reads" className="py-24 bg-cream-dark/50">
-      <div className="container mx-auto px-6">
+    <section id="past-reads" className="py-24 bg-cream-dark/30">
+      <div className="container mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <p className="small-caps text-sm tracking-[0.3em] text-accent mb-3">
+            <p className="small-caps text-xs tracking-[0.3em] text-accent mb-3">
               Our Library
             </p>
             <h2 className="font-serif text-4xl md:text-5xl font-medium text-foreground">

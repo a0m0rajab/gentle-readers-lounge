@@ -44,10 +44,10 @@ const events: Event[] = [
 const EventSection = () => {
   return (
     <section id="schedule" className="py-24">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <p className="small-caps text-sm tracking-[0.3em] text-accent mb-3">
+          <p className="small-caps text-xs tracking-[0.3em] text-accent mb-3">
             Mark Your Calendar
           </p>
           <h2 className="font-serif text-4xl md:text-5xl font-medium text-foreground mb-4">

@@ -21,7 +21,7 @@ const HeroSection = () => {
         <div className="absolute top-1/2 right-10 w-4 h-4 rounded-full bg-accent/20" />
       </div>
 
-      <div className="container mx-auto px-6 text-center relative z-10">
+      <div className="container mx-auto px-6 lg:px-8 text-center relative z-10">
         <div className="max-w-3xl mx-auto stagger-children">
           {/* Eyebrow */}
           <p className="small-caps text-sm tracking-[0.3em] text-muted-foreground mb-6 opacity-0">
