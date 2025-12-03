@@ -12,7 +12,12 @@ export interface Book {
   description: string;
   discussionQuestions: string[];
   meetingDate: string;
+  coverImage?: string;
 }
+
+import phoenixProjectCover from "@/assets/covers/the-phoenix-project.jpg";
+import howGoogleWorksCover from "@/assets/covers/how-google-works.jpg";
+import refactoringUICover from "@/assets/covers/refactoring-ui.jpg";
 
 export const books: Book[] = [
   {
@@ -33,7 +38,8 @@ export const books: Book[] = [
       "How did the relationship between IT and the business change throughout the book?",
       "What lessons about constraints and bottlenecks resonated most with you?"
     ],
-    meetingDate: "January 18, 2025"
+    meetingDate: "January 18, 2025",
+    coverImage: phoenixProjectCover
   },
   {
     id: 2,
@@ -53,7 +59,8 @@ export const books: Book[] = [
       "How has Google balanced innovation with business sustainability?",
       "What surprised you most about Google's management philosophy?"
     ],
-    meetingDate: "December 15, 2024"
+    meetingDate: "December 15, 2024",
+    coverImage: howGoogleWorksCover
   },
   {
     id: 3,
@@ -73,7 +80,8 @@ export const books: Book[] = [
       "What was the most surprising insight about visual hierarchy?",
       "How can developers and designers better collaborate using these principles?"
     ],
-    meetingDate: "November 20, 2024"
+    meetingDate: "November 20, 2024",
+    coverImage: refactoringUICover
   },
   {
     id: 4,
