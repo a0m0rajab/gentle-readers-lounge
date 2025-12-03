@@ -55,36 +55,36 @@ const BookDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24">
+      <main className="pt-20">
         {/* Hero Section */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
-          <div className="container mx-auto px-6 relative">
+        <section className="py-20 md:py-28 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/3 via-transparent to-transparent" />
+          <div className="container mx-auto px-6 lg:px-8 relative">
             {/* Back Link */}
             <Link 
               to="/books" 
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-12 group"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span className="font-body text-sm">Back to Library</span>
             </Link>
 
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              {/* Book Cover */}
-              <div className="flex justify-center lg:justify-start">
+            <div className="grid lg:grid-cols-5 gap-12 lg:gap-20 items-start">
+              {/* Book Cover - Takes 2 columns */}
+              <div className="lg:col-span-2 flex justify-center lg:justify-end lg:sticky lg:top-28">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-foreground/10 rounded-lg transform translate-x-4 translate-y-4" />
-                  <div className={`relative w-64 md:w-72 h-96 md:h-[28rem] bg-gradient-to-br ${book.color} rounded-lg shadow-elevated flex items-center justify-center`}>
-                    <div className="text-center px-8">
-                      <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
-                      <h1 className="font-serif text-2xl md:text-3xl text-primary-foreground leading-tight mb-2">
+                  <div className="absolute inset-0 bg-foreground/8 rounded-xl transform translate-x-4 translate-y-4" />
+                  <div className={`relative w-56 md:w-64 h-80 md:h-96 bg-gradient-to-br ${book.color} rounded-xl shadow-elevated flex items-center justify-center`}>
+                    <div className="text-center px-6">
+                      <div className="w-14 h-0.5 bg-accent mx-auto mb-5" />
+                      <h1 className="font-serif text-xl md:text-2xl text-primary-foreground leading-tight mb-1">
                         {book.title.split(' ').slice(0, -1).join(' ')}
                       </h1>
-                      <h1 className="font-serif text-2xl md:text-3xl text-accent font-semibold leading-tight">
+                      <h1 className="font-serif text-xl md:text-2xl text-accent font-semibold leading-tight">
                         {book.title.split(' ').slice(-1)}
                       </h1>
-                      <div className="w-16 h-0.5 bg-accent mx-auto mt-6" />
-                      <p className="font-body text-sm text-primary-foreground/80 mt-6 italic">
+                      <div className="w-14 h-0.5 bg-accent mx-auto mt-5" />
+                      <p className="font-body text-sm text-primary-foreground/80 mt-5 italic">
                         {book.author}
                       </p>
                     </div>
@@ -92,48 +92,49 @@ const BookDetail = () => {
                 </div>
               </div>
 
-              {/* Book Details */}
-              <div>
-                <span className="inline-block px-3 py-1 bg-accent/20 text-accent-foreground text-xs font-medium rounded-full small-caps tracking-wider mb-4">
+              {/* Book Details - Takes 3 columns */}
+              <div className="lg:col-span-3">
+                <span className="inline-block px-4 py-1.5 bg-accent/15 text-accent-foreground text-xs font-medium rounded-full small-caps tracking-wider mb-5">
                   {book.genre}
                 </span>
 
-                <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-2">
+                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-3 leading-tight">
                   {book.title}
                 </h1>
-                <p className="font-body text-xl text-secondary mb-6 italic">
+                <p className="font-body text-xl text-secondary mb-8 italic">
                   by {book.author}
                 </p>
 
                 {/* Meta Info */}
-                <div className="flex flex-wrap gap-6 mb-8 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-wrap gap-8 mb-10 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2.5">
                     <BookOpen className="w-4 h-4 text-accent" />
-                    <span>{book.pageCount} pages</span>
+                    <span className="font-body">{book.pageCount} pages</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <Calendar className="w-4 h-4 text-accent" />
-                    <span>{book.month}</span>
+                    <span className="font-body">{book.month}</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <Users className="w-4 h-4 text-accent" />
-                    <span>{book.readerCount} readers</span>
+                    <span className="font-body">{book.readerCount} readers</span>
                   </div>
                 </div>
 
-                <p className="font-body text-muted-foreground leading-relaxed mb-8 drop-cap">
+                <p className="font-body text-lg text-muted-foreground leading-relaxed mb-10 drop-cap max-w-2xl">
                   {book.description}
                 </p>
 
                 {book.isCurrent && (
-                  <div className="bg-accent/10 border border-accent/30 rounded-lg p-4 mb-8">
-                    <p className="text-sm text-accent-foreground">
-                      <span className="font-semibold">Next Meeting:</span> {book.meetingDate}
+                  <div className="bg-primary/5 border border-primary/20 rounded-xl p-5 mb-10 max-w-md">
+                    <p className="text-sm text-foreground">
+                      <span className="font-semibold text-primary">Next Meeting:</span>{" "}
+                      <span className="text-muted-foreground">{book.meetingDate}</span>
                     </p>
                   </div>
                 )}
 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Button variant="literary" size="lg">
                     Join Discussion
                   </Button>
@@ -148,9 +149,9 @@ const BookDetail = () => {
 
         {/* Stats Section */}
         {stats && (
-          <section className="py-12 bg-cream-dark/30">
-            <div className="container mx-auto px-6">
-              <div className="max-w-3xl mx-auto">
+          <section className="py-16 md:py-20">
+            <div className="container mx-auto px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto">
                 <BookStats stats={stats} bookTitle={book.title} />
               </div>
             </div>
@@ -159,13 +160,13 @@ const BookDetail = () => {
 
         {/* MDX Content Section */}
         {MDXContent && (
-          <section className="py-16">
-            <div className="container mx-auto px-6">
+          <section className="py-16 md:py-20 bg-card/50">
+            <div className="container mx-auto px-6 lg:px-8">
               <div className="max-w-3xl mx-auto prose-custom">
                 <MDXProvider components={mdxComponents}>
                   <Suspense fallback={
-                    <div className="animate-pulse space-y-4">
-                      <div className="h-8 bg-muted rounded w-3/4"></div>
+                    <div className="animate-pulse space-y-6">
+                      <div className="h-8 bg-muted rounded-lg w-3/4"></div>
                       <div className="h-4 bg-muted rounded w-full"></div>
                       <div className="h-4 bg-muted rounded w-5/6"></div>
                       <div className="h-4 bg-muted rounded w-4/5"></div>
@@ -180,18 +181,20 @@ const BookDetail = () => {
         )}
 
         {/* Navigation */}
-        <section className="py-12 border-t border-border">
-          <div className="container mx-auto px-6">
-            <div className="flex justify-between items-center">
+        <section className="py-16 border-t border-border/50">
+          <div className="container mx-auto px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto flex justify-between items-center">
               {prevBook ? (
                 <Link 
                   to={`/book/${prevBook.slug}`}
-                  className="group flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+                  className="group flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                  </div>
                   <div className="text-left">
-                    <p className="text-xs small-caps tracking-wider text-accent">Previous</p>
-                    <p className="font-serif">{prevBook.title}</p>
+                    <p className="text-xs small-caps tracking-wider text-accent mb-1">Previous</p>
+                    <p className="font-serif text-foreground">{prevBook.title}</p>
                   </div>
                 </Link>
               ) : (
@@ -201,13 +204,15 @@ const BookDetail = () => {
               {nextBook ? (
                 <Link 
                   to={`/book/${nextBook.slug}`}
-                  className="group flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors text-right"
+                  className="group flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors text-right"
                 >
-                  <div>
-                    <p className="text-xs small-caps tracking-wider text-accent">Next</p>
-                    <p className="font-serif">{nextBook.title}</p>
+                  <div className="text-right">
+                    <p className="text-xs small-caps tracking-wider text-accent mb-1">Next</p>
+                    <p className="font-serif text-foreground">{nextBook.title}</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
                 </Link>
               ) : (
                 <div />

@@ -12,18 +12,18 @@ const Books = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24">
+      <main className="pt-20">
         {/* Hero */}
-        <section className="py-16 md:py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
-          <div className="container mx-auto px-6 relative text-center">
-            <p className="small-caps text-sm tracking-[0.3em] text-accent mb-3">
+        <section className="py-20 md:py-24 relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/3 via-transparent to-transparent" />
+          <div className="container mx-auto px-6 lg:px-8 relative text-center">
+            <p className="small-caps text-xs tracking-[0.3em] text-accent mb-4">
               Our Collection
             </p>
-            <h1 className="font-serif text-4xl md:text-6xl font-medium text-foreground mb-4">
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-medium text-foreground mb-5">
               The Library
             </h1>
-            <p className="font-body text-muted-foreground max-w-xl mx-auto">
+            <p className="font-body text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Explore all the books we've read together as a community. 
               Each selection has sparked meaningful conversations and lasting memories.
             </p>
@@ -32,9 +32,9 @@ const Books = () => {
 
         {/* Current Read */}
         {currentBook && (
-          <section className="py-12">
-            <div className="container mx-auto px-6">
-              <p className="small-caps text-sm tracking-[0.3em] text-accent mb-6">
+          <section className="py-16">
+            <div className="container mx-auto px-6 lg:px-8">
+              <p className="small-caps text-xs tracking-[0.3em] text-accent mb-6">
                 Currently Reading
               </p>
               <Link to={`/book/${currentBook.slug}`} className="block group">
@@ -91,9 +91,9 @@ const Books = () => {
         )}
 
         {/* Past Reads Grid */}
-        <section className="py-12 pb-24">
-          <div className="container mx-auto px-6">
-            <p className="small-caps text-sm tracking-[0.3em] text-accent mb-6">
+        <section className="py-16 pb-24">
+          <div className="container mx-auto px-6 lg:px-8">
+            <p className="small-caps text-xs tracking-[0.3em] text-accent mb-8">
               Past Reads
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
