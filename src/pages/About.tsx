@@ -53,6 +53,27 @@ const values = [
   }
 ];
 
+const testimonials = [
+  {
+    quote: "This club transformed my relationship with reading. I've discovered authors I never would have found on my own, and the discussions add so much depth to every book.",
+    name: "Rachel Kim",
+    role: "Member since 2020",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face"
+  },
+  {
+    quote: "As someone who moved to a new city, The Gentle Readers gave me an instant community. These people have become some of my closest friends.",
+    name: "David Okafor",
+    role: "Member since 2021",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+  },
+  {
+    quote: "The discussions here are unlike anything I've experienced. It's intellectual without being pretentious, welcoming without being shallow.",
+    name: "Mira Patel",
+    role: "Member since 2019",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face"
+  }
+];
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -224,8 +245,62 @@ const About = () => {
           </div>
         </section>
 
-        {/* Join CTA Section */}
+        {/* Testimonials Section */}
         <section className="py-16 md:py-24">
+          <div className="container mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <span className="text-accent font-body text-sm tracking-widest uppercase">
+                What Our Members Say
+              </span>
+              <h2 className="font-serif text-3xl md:text-4xl text-foreground mt-4 mb-4">
+                Reader Testimonials
+              </h2>
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            >
+              {testimonials.map((testimonial) => (
+                <motion.div
+                  key={testimonial.name}
+                  variants={itemVariants}
+                  className="bg-card rounded-2xl p-8 border border-border relative"
+                >
+                  <div className="absolute -top-4 left-8 text-6xl text-accent/20 font-serif">"</div>
+                  <p className="font-body text-muted-foreground leading-relaxed mb-6 relative z-10">
+                    {testimonial.quote}
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-accent/20">
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-serif text-foreground font-medium">{testimonial.name}</p>
+                      <p className="font-body text-accent text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Join CTA Section */}
+        <section className="py-16 md:py-24 bg-card/50">
           <div className="container mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

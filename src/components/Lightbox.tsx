@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { EventPhoto } from "@/data/events";
@@ -12,6 +12,9 @@ interface LightboxProps {
 
 const Lightbox = ({ photos, initialIndex, isOpen, onClose }: LightboxProps) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     setCurrentIndex(initialIndex);
@@ -24,6 +27,33 @@ const Lightbox = ({ photos, initialIndex, isOpen, onClose }: LightboxProps) => {
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
   }, [photos.length]);
+
+  // Touch handlers for swipe gestures
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndX.current = null;
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      goToNext();
+    } else if (isRightSwipe) {
+      goToPrevious();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -78,7 +108,7 @@ const Lightbox = ({ photos, initialIndex, isOpen, onClose }: LightboxProps) => {
           {photos.length > 1 && (
             <button
               onClick={goToPrevious}
-              className="absolute left-4 md:left-8 z-10 p-3 rounded-full bg-background/10 text-primary-foreground hover:bg-background/20 transition-colors"
+              className="absolute left-4 md:left-8 z-10 p-3 rounded-full bg-background/10 text-primary-foreground hover:bg-background/20 transition-colors hidden md:block"
               aria-label="Previous photo"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -89,15 +119,20 @@ const Lightbox = ({ photos, initialIndex, isOpen, onClose }: LightboxProps) => {
           {photos.length > 1 && (
             <button
               onClick={goToNext}
-              className="absolute right-4 md:right-8 z-10 p-3 rounded-full bg-background/10 text-primary-foreground hover:bg-background/20 transition-colors"
+              className="absolute right-4 md:right-8 z-10 p-3 rounded-full bg-background/10 text-primary-foreground hover:bg-background/20 transition-colors hidden md:block"
               aria-label="Next photo"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
           )}
 
-          {/* Image container */}
-          <div className="relative w-full h-full flex items-center justify-center p-12 md:p-20">
+          {/* Image container with touch support */}
+          <div 
+            className="relative w-full h-full flex items-center justify-center p-12 md:p-20"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
@@ -110,7 +145,8 @@ const Lightbox = ({ photos, initialIndex, isOpen, onClose }: LightboxProps) => {
                 <img
                   src={currentPhoto.url}
                   alt={currentPhoto.caption || "Event photo"}
-                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl select-none"
+                  draggable={false}
                 />
               </motion.div>
             </AnimatePresence>
@@ -144,6 +180,12 @@ const Lightbox = ({ photos, initialIndex, isOpen, onClose }: LightboxProps) => {
                   />
                 ))}
               </div>
+            )}
+            {/* Mobile swipe hint */}
+            {photos.length > 1 && (
+              <p className="text-primary-foreground/60 text-xs mt-3 md:hidden">
+                Swipe to navigate
+              </p>
             )}
           </div>
         </motion.div>
