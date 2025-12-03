@@ -56,8 +56,8 @@ const Header = () => {
                 </Link>
               )
             ))}
-            <Button variant="literary" size="sm">
-              Join Us
+            <Button variant="literary" size="sm" asChild>
+              <Link to="/membership">Join Us</Link>
             </Button>
           </nav>
 
@@ -96,8 +96,8 @@ const Header = () => {
                   </Link>
                 )
               ))}
-              <Button variant="literary" className="mt-2">
-                Join Us
+              <Button variant="literary" className="mt-2" asChild>
+                <Link to="/membership">Join Us</Link>
               </Button>
             </div>
           </nav>
