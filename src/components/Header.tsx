@@ -12,6 +12,7 @@ const Header = () => {
     { label: "Home", href: isHomePage ? "#home" : "/", isAnchor: isHomePage },
     { label: "Current Read", href: isHomePage ? "#current" : "/#current", isAnchor: isHomePage },
     { label: "Library", href: "/books", isAnchor: false },
+    { label: "Events", href: "/events", isAnchor: false },
     { label: "Schedule", href: isHomePage ? "#schedule" : "/#schedule", isAnchor: isHomePage },
   ];
 
