@@ -14,8 +14,13 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     {
       enforce: "pre" as const,
-      ...mdx({ 
+      ...mdx({
         remarkPlugins: [remarkGfm],
+        // Prevent production bundles from calling jsxDEV (dev-only).
+        development: mode === "development",
+        // Enable MDXProvider components mapping.
+        providerImportSource: "@mdx-js/react",
+        // Use the React automatic JSX runtime.
         jsxRuntime: "automatic",
         jsxImportSource: "react",
       }),
