@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Calendar, Users, ArrowRight, Bookmark } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { books } from "@/data/books";
 import { bookStats } from "@/data/bookStats";
 import { Badge } from "@/components/ui/badge";
@@ -55,8 +56,46 @@ const ReadingGuides = () => {
     },
   };
 
+  // Breadcrumbs for structured data
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Reading Guides", url: "/guides" },
+  ];
+
+  // ItemList structured data for the collection
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Reading Guides Collection",
+    description: "Curated reading guides from The Gentle Readers Club book discussions",
+    numberOfItems: books.length,
+    itemListElement: books.map((book, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Book",
+        name: book.title,
+        author: { "@type": "Person", name: book.author },
+        genre: book.genre,
+        numberOfPages: book.pageCount,
+        url: `https://gentlereaders.club/book/${book.slug}`,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Reading Guides - Book Discussion Companions"
+        description="Dive deeper into our book selections with curated reading guides featuring themes, discussion highlights, member reviews, and literary companions."
+        canonicalUrl="/guides"
+        breadcrumbs={breadcrumbs}
+      />
+      {/* ItemList JSON-LD for the book collection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       <Header />
 
       {/* Hero Section */}
