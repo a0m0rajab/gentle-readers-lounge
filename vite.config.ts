@@ -31,6 +31,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Ensure production bundles can execute even if some MDX output uses jsxDEV.
+      "react/jsx-dev-runtime": path.resolve(__dirname, "./src/lib/jsx-dev-runtime-shim.ts"),
     },
   },
 }));
