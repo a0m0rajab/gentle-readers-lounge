@@ -11,6 +11,7 @@ import BookStats from "@/components/BookStats";
 import EventGallery from "@/components/EventGallery";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 // Dynamic MDX content loader
 const mdxModules = import.meta.glob("../content/books/*.mdx");
@@ -55,8 +56,40 @@ const BookDetail = () => {
   const prevBook = currentIndex > 0 ? allBooks[currentIndex - 1] : null;
   const nextBook = currentIndex < allBooks.length - 1 ? allBooks[currentIndex + 1] : null;
 
+  // SEO meta description - truncate to ~155 chars
+  const seoDescription = book.description.length > 155
+    ? book.description.substring(0, 152) + "..."
+    : book.description;
+
+  // Breadcrumbs for structured data
+  const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "Library", url: "/books" },
+    { name: book.title, url: `/book/${book.slug}` },
+  ];
+
+  // Book structured data
+  const bookData = {
+    title: book.title,
+    author: book.author,
+    description: book.description,
+    genre: book.genre,
+    pageCount: book.pageCount,
+    coverImage: book.coverImage,
+    rating: stats?.averageRating,
+    ratingCount: stats?.totalAttendees,
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${book.title} by ${book.author} - Reading Guide`}
+        description={seoDescription}
+        canonicalUrl={`/book/${book.slug}`}
+        ogType="book"
+        breadcrumbs={breadcrumbs}
+        book={bookData}
+      />
       <Header />
       <main className="pt-20">
         {/* Hero Section */}
