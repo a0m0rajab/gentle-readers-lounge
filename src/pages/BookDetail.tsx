@@ -49,9 +49,10 @@ const BookDetail = () => {
   const nextBook = currentIndex < allBooks.length - 1 ? allBooks[currentIndex + 1] : null;
 
   // SEO meta description - truncate to ~155 chars
-  const seoDescription = book.description.length > 155
-    ? book.description.substring(0, 152) + "..."
-    : book.description;
+  const bookDescription = book.description || "";
+  const seoDescription = bookDescription.length > 155
+    ? bookDescription.substring(0, 152) + "..."
+    : bookDescription;
 
   // Breadcrumbs for structured data
   const breadcrumbs = [
