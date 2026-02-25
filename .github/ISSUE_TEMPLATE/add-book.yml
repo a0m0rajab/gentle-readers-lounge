@@ -1,0 +1,130 @@
+name: "Add New Book"
+description: "Submit a new book to be added to the Gentle Readers Lounge reading list."
+title: "[Book]: "
+labels:
+  - "add-book"
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Book Title
+      placeholder: "e.g. The Midnight Library"
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      placeholder: "e.g. Matt Haig"
+    validations:
+      required: true
+
+  - type: input
+    id: genre
+    attributes:
+      label: Genre
+      placeholder: "e.g. Literary Fiction"
+    validations:
+      required: true
+
+  - type: input
+    id: month
+    attributes:
+      label: Reading Month
+      description: "Format: Mon YYYY (e.g. Jan 2025)"
+      placeholder: "e.g. Mar 2025"
+    validations:
+      required: true
+
+  - type: input
+    id: meeting_date
+    attributes:
+      label: Meeting Date
+      description: "Full date of the book club meeting (e.g. March 20, 2025)"
+      placeholder: "e.g. March 20, 2025"
+    validations:
+      required: true
+
+  - type: input
+    id: page_count
+    attributes:
+      label: Page Count
+      placeholder: "e.g. 304"
+    validations:
+      required: true
+
+  - type: input
+    id: reader_count
+    attributes:
+      label: Expected Reader Count
+      placeholder: "e.g. 25"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: is_current
+    attributes:
+      label: Is this the current book?
+      options:
+        - "false"
+        - "true"
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: color
+    attributes:
+      label: Cover Color (Tailwind gradient)
+      description: "Tailwind CSS gradient classes for the book card background"
+      placeholder: "e.g. from-emerald-700 to-emerald-900"
+    validations:
+      required: true
+
+  - type: input
+    id: cover_image
+    attributes:
+      label: Cover Image URL
+      description: "Optional URL to the book cover image"
+      placeholder: "https://..."
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Book Description
+      description: "A short synopsis or blurb for the book."
+      placeholder: "Write a compelling description of the book..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: discussion_questions
+    attributes:
+      label: Discussion Questions
+      description: "Enter each question on its own line."
+      placeholder: |
+        What themes stood out most to you?
+        How did the ending change your view of the story?
+        Which character did you connect with the most?
+    validations:
+      required: true
+
+  - type: textarea
+    id: themes
+    attributes:
+      label: Themes
+      description: "Enter each theme on its own line."
+      placeholder: |
+        Identity
+        Loss
+        Redemption
+
+  - type: input
+    id: slug
+    attributes:
+      label: URL Slug
+      description: "Lowercase, hyphen-separated identifier used in the URL and filename (e.g. the-midnight-library)"
+      placeholder: "e.g. the-midnight-library"
+    validations:
+      required: true

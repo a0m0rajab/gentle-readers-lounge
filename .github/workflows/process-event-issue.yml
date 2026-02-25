@@ -1,0 +1,161 @@
+name: Process New Event Issue
+
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  add-event:
+    if: github.event.label.name == 'add-event'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Parse issue and update events file
+        id: update-events
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 << 'EOF'
+          import os
+          import re
+          import sys
+
+          body = os.environ.get("ISSUE_BODY", "")
+
+          def extract_field(label, text):
+              """Extract field value from GitHub issue form body."""
+              pattern = rf"### {re.escape(label)}\s*\n+(.+?)(?=\n###|\Z)"
+              match = re.search(pattern, text, re.DOTALL)
+              if match:
+                  return match.group(1).strip()
+              return ""
+
+          book_slug = extract_field("Book Slug", body)
+          event_id = extract_field("Event ID", body)
+          date = extract_field("Event Date", body)
+          location = extract_field("Location", body)
+          description = extract_field("Event Description", body)
+          attendee_count = extract_field("Attendee Count", body)
+          attendees_raw = extract_field("Attendees", body)
+          highlights_raw = extract_field("Event Highlights", body)
+
+          # Validate required fields
+          if not all([book_slug, event_id, date, location, description,
+                      attendee_count, attendees_raw, highlights_raw]):
+              print("ERROR: Missing required fields in issue body.")
+              print(f"book_slug: {book_slug!r}")
+              print(f"event_id: {event_id!r}")
+              sys.exit(1)
+
+          # Parse attendees (one name per line)
+          attendee_names = [a.strip() for a in attendees_raw.splitlines() if a.strip()]
+
+          # Parse highlights (one per line)
+          highlights = [h.strip() for h in highlights_raw.splitlines() if h.strip()]
+
+          # Build attendees TypeScript array entries
+          def make_initials(name):
+              parts = name.split()
+              if len(parts) >= 2:
+                  return parts[0][0].upper() + parts[-1][0].upper()
+              return name[:2].upper()
+
+          attendees_ts = ""
+          for i, name in enumerate(attendee_names):
+              initials = make_initials(name)
+              attendees_ts += f'      {{ id: "{i+1}", name: "{name}", initials: "{initials}" }},\n'
+          attendees_ts = attendees_ts.rstrip(",\n")
+
+          # Build highlights TypeScript array entries
+          highlights_ts = "\n".join(f'      "{h}",' for h in highlights).rstrip(",")
+
+          new_event_block = f"""  {{
+            id: "{event_id}",
+            bookSlug: "{book_slug}",
+            date: "{date}",
+            location: "{location}",
+            description: "{description.replace(chr(34), chr(92)+chr(34))}",
+            attendeeCount: {attendee_count},
+            attendees: [
+          {attendees_ts}
+            ],
+            photos: [],
+            highlights: [
+          {highlights_ts}
+            ]
+          }},"""
+
+          events_path = "src/data/events.ts"
+          with open(events_path, "r") as f:
+              content = f.read()
+
+          # Insert the new event before the closing bracket of the events array
+          insert_marker = "export const events: BookEvent[] = ["
+          marker_pos = content.find(insert_marker)
+          if marker_pos == -1:
+              print("ERROR: Could not find events array in events.ts")
+              sys.exit(1)
+
+          # Find the position right after the opening bracket
+          array_start = content.find("[", marker_pos) + 1
+          updated_content = (
+              content[:array_start]
+              + "\n"
+              + new_event_block
+              + content[array_start:]
+          )
+
+          with open(events_path, "w") as f:
+              f.write(updated_content)
+
+          print(f"Updated {events_path} with event '{event_id}'")
+
+          # Set outputs for next step
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"event_id={event_id}\n")
+              out.write(f"book_slug={book_slug}\n")
+          EOF
+
+      - name: Commit and push updated events file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/events.ts
+          git commit -m "feat: add event '${{ steps.update-events.outputs.event_id }}' for book '${{ steps.update-events.outputs.book_slug }}' from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Event **${{ steps.update-events.outputs.event_id }}** for book \`${{ steps.update-events.outputs.book_slug }}\` has been added!\n\nFile updated: \`src/data/events.ts\`\n\nThe event will appear on the site after the next deployment.`
+            });
+
+      - name: Close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.update({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              state_reason: 'completed'
+            });
