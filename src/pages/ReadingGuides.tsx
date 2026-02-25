@@ -5,36 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { books } from "@/data/books";
-import { bookStats } from "@/data/bookStats";
 import { Badge } from "@/components/ui/badge";
-
-// Theme tags extracted from MDX content for each book
-const bookThemes: Record<string, string[]> = {
-  "the-phoenix-project": ["DevOps", "IT Management", "Business Fiction", "Manufacturing Principles", "Continuous Improvement"],
-  "how-google-works": ["Innovation", "Corporate Culture", "Talent Management", "Leadership", "Technology Strategy"],
-  "refactoring-ui": ["Design Systems", "Visual Hierarchy", "Typography", "Developer-Friendly", "Practical Design"],
-  "the-house-of-spirits": ["Magical Realism", "Multigenerational Saga", "Political Upheaval", "Feminine Power", "Latin American"],
-  "circe": ["Mythology", "Feminine Power", "Isolation & Identity", "Transformation", "Self-Discovery"],
-  "beloved": ["Memory & Trauma", "Slavery Legacy", "Supernatural", "Motherhood", "Community & Healing"],
-  "the-secret-history": ["Dark Academia", "Greek Philosophy", "Morality", "Obsession", "Privilege"],
-  "pachinko": ["Identity", "Discrimination", "Immigrant Experience", "Family Saga", "Korean-Japanese"],
-  "the-remains-of-the-day": ["Duty & Regret", "British Society", "Unreliable Narrator", "Emotional Repression", "Historical Fiction"],
-  "one-hundred-years-of-solitude": ["Magical Realism", "Cyclical Time", "Solitude", "Latin American", "Family Legacy"],
-};
-
-// Featured highlights from each book's discussion
-const bookHighlights: Record<string, string> = {
-  "the-phoenix-project": "The story illustrates how IT principles mirror manufacturing, with the 'Four Types of Work' framework reshaping how we think about technology operations.",
-  "how-google-works": "Google's concept of 'smart creatives' and their approach to letting employees spend 20% time on passion projects sparked our longest debate.",
-  "refactoring-ui": "Members immediately applied the spacing scale and visual hierarchy techniques to their projects—practical design for developers.",
-  "the-house-of-spirits": "Clara's clairvoyance as metaphor for women's intuitive resistance to patriarchy generated rich discussion on magical realism's political power.",
-  "circe": "November's meeting ran an extra hour! Circe's choice of mortality over immortality inverted traditional Greek values—limitation makes choices meaningful.",
-  "beloved": "Morrison's fragmented narrative structure mirrors trauma's effect on memory—the most emotionally challenging read of the year.",
-  "the-secret-history": "Our largest turnout at 35 readers! The tension between beauty and morality kept everyone debating Julian's role as teacher or manipulator.",
-  "pachinko": "The four-generation saga illuminated the Korean-Japanese experience with rare nuance—many members sought out the Apple TV+ adaptation.",
-  "the-remains-of-the-day": "Stevens's definition of 'dignity' versus the reader's interpretation sparked our most philosophical discussion on emotional repression.",
-  "one-hundred-years-of-solitude": "Tracking the repeated names and circular patterns became a collective effort—we created a family tree together!",
-};
 
 const ReadingGuides = () => {
   const containerVariants = {
@@ -129,10 +100,9 @@ const ReadingGuides = () => {
             animate="visible"
             className="grid gap-8"
           >
-            {books.map((book, index) => {
-              const themes = bookThemes[book.slug] || [book.genre];
-              const highlight = bookHighlights[book.slug] || book.description.substring(0, 150) + "...";
-              const stats = bookStats[book.slug];
+            {books.map((book) => {
+              const themes = book.themes || [book.genre];
+              const highlight = book.highlight || book.description.substring(0, 150) + "...";
 
               return (
                 <motion.article
@@ -197,7 +167,7 @@ const ReadingGuides = () => {
                             </span>
                             <span className="flex items-center gap-1.5">
                               <Users className="w-4 h-4" />
-                              {stats?.totalAttendees || book.readerCount} readers
+                              {book.totalAttendees || book.readerCount} readers
                             </span>
                             <span className="flex items-center gap-1.5">
                               <BookOpen className="w-4 h-4" />

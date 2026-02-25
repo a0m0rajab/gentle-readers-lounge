@@ -1,3 +1,5 @@
+import type { BookStatsData } from "@/components/BookStats";
+
 export interface Book {
   id: number;
   slug: string;
@@ -13,6 +15,17 @@ export interface Book {
   discussionQuestions: string[];
   meetingDate: string;
   coverImage?: string;
+  totalAttendees?: number;
+  averageRating?: number;
+  totalDiscussions?: number;
+  readingTime?: string;
+  completionRate?: number;
+  topContributor?: string;
+  firstTimers?: number;
+  regulars?: number;
+  veterans?: number;
+  themes?: string[];
+  highlight?: string;
 }
 
 interface MDXBookModule {
@@ -29,6 +42,17 @@ interface MDXBookModule {
   coverImage?: string;
   description: string;
   discussionQuestions: string[];
+  totalAttendees?: number;
+  averageRating?: number;
+  totalDiscussions?: number;
+  readingTime?: string;
+  completionRate?: number;
+  topContributor?: string;
+  firstTimers?: number;
+  regulars?: number;
+  veterans?: number;
+  themes?: string[];
+  highlight?: string;
 }
 
 // Eagerly load all MDX book files
@@ -58,6 +82,17 @@ const booksUnsorted: Book[] = Object.entries(mdxModules).map(
       coverImage: mod.coverImage,
       description: mod.description,
       discussionQuestions: mod.discussionQuestions ?? [],
+      totalAttendees: mod.totalAttendees,
+      averageRating: mod.averageRating,
+      totalDiscussions: mod.totalDiscussions,
+      readingTime: mod.readingTime,
+      completionRate: mod.completionRate,
+      topContributor: mod.topContributor,
+      firstTimers: mod.firstTimers,
+      regulars: mod.regulars,
+      veterans: mod.veterans,
+      themes: mod.themes,
+      highlight: mod.highlight,
     };
   }
 );
@@ -108,4 +143,25 @@ export const getBookBySlug = (slug: string): Book | undefined => {
 
 export const getAllBooks = (): Book[] => {
   return books;
+};
+
+export const getBookStats = (slug: string): BookStatsData | undefined => {
+  const book = getBookBySlug(slug);
+  if (!book || book.averageRating == null) return undefined;
+  return {
+    totalAttendees: book.totalAttendees ?? book.readerCount,
+    averageRating: book.averageRating,
+    totalDiscussions: book.totalDiscussions ?? 0,
+    readingTime: book.readingTime ?? "N/A",
+    completionRate: book.completionRate ?? 0,
+    topContributor: book.topContributor,
+    attendeeBreakdown:
+      book.firstTimers != null
+        ? {
+            firstTimers: book.firstTimers,
+            regulars: book.regulars ?? 0,
+            veterans: book.veterans ?? 0,
+          }
+        : undefined,
+  };
 };

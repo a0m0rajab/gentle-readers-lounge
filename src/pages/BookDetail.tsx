@@ -3,8 +3,7 @@ import { ArrowLeft, BookOpen, Calendar, Users, ChevronRight, ChevronLeft } from 
 import { MDXProvider } from "@mdx-js/react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { getBookBySlug, getAllBooks, getBookMDXComponent } from "@/data/books";
-import { getBookStats } from "@/data/bookStats";
+import { getBookBySlug, getAllBooks, getBookMDXComponent, getBookStats } from "@/data/books";
 import { getEventByBookSlug } from "@/data/events";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
 import BookStats from "@/components/BookStats";
