@@ -68,7 +68,8 @@ const monthOrder: Record<string, number> = {
   Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12,
 };
 
-function parseMonthYear(monthStr: string): number {
+function parseMonthYear(monthStr: string | undefined): number {
+  if (!monthStr) return 0;
   const parts = monthStr.split(" ");
   const mon = monthOrder[parts[0]] ?? 0;
   const year = parseInt(parts[1]) || 2024;
