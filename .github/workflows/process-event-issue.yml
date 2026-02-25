@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Parse issue and update events file
+      - name: Parse issue and create event MDX file
         id: update-events
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
@@ -66,74 +66,64 @@ jobs:
           # Parse highlights (one per line)
           highlights = [h.strip() for h in highlights_raw.splitlines() if h.strip()]
 
-          # Build attendees TypeScript array entries
           def make_initials(name):
               parts = name.split()
               if len(parts) >= 2:
                   return parts[0][0].upper() + parts[-1][0].upper()
               return name[:2].upper()
 
-          attendees_ts = ""
-          for i, name in enumerate(attendee_names):
+          def yaml_str(value):
+              escaped = value.replace('"', '\\"')
+              return f'"{escaped}"'
+
+          def yaml_list(items, indent=2):
+              prefix = " " * indent
+              return "\n".join(f"{prefix}- {yaml_str(item)}" for item in items)
+
+          # Build attendees YAML block
+          attendees_yaml = ""
+          for name in attendee_names:
               initials = make_initials(name)
-              attendees_ts += f'      {{ id: "{i+1}", name: "{name}", initials: "{initials}" }},\n'
-          attendees_ts = attendees_ts.rstrip(",\n")
+              attendees_yaml += f'  - name: {yaml_str(name)}\n    initials: "{initials}"\n'
+          attendees_yaml = attendees_yaml.rstrip()
 
-          # Build highlights TypeScript array entries
-          highlights_ts = "\n".join(f'      "{h}",' for h in highlights).rstrip(",")
+          frontmatter = f"""---
+          bookSlug: {yaml_str(book_slug)}
+          date: {yaml_str(date)}
+          location: {yaml_str(location)}
+          description: {yaml_str(description)}
+          attendeeCount: {attendee_count}
+          attendees:
+          {attendees_yaml}
+          photos: []
+          highlights:
+          {yaml_list(highlights)}
+          ---"""
 
-          new_event_block = f"""  {{
-            id: "{event_id}",
-            bookSlug: "{book_slug}",
-            date: "{date}",
-            location: "{location}",
-            description: "{description.replace(chr(34), chr(92)+chr(34))}",
-            attendeeCount: {attendee_count},
-            attendees: [
-          {attendees_ts}
-            ],
-            photos: [],
-            highlights: [
-          {highlights_ts}
-            ]
-          }},"""
+          import textwrap
+          frontmatter = textwrap.dedent(frontmatter)
 
-          events_path = "src/data/events.ts"
-          with open(events_path, "r") as f:
-              content = f.read()
+          mdx_content = f"{frontmatter}\n"
 
-          # Insert the new event before the closing bracket of the events array
-          insert_marker = "export const events: BookEvent[] = ["
-          marker_pos = content.find(insert_marker)
-          if marker_pos == -1:
-              print("ERROR: Could not find events array in events.ts")
-              sys.exit(1)
+          output_path = f"src/content/events/{event_id}.mdx"
+          os.makedirs(os.path.dirname(output_path), exist_ok=True)
+          with open(output_path, "w") as f:
+              f.write(mdx_content)
 
-          # Find the position right after the opening bracket
-          array_start = content.find("[", marker_pos) + 1
-          updated_content = (
-              content[:array_start]
-              + "\n"
-              + new_event_block
-              + content[array_start:]
-          )
-
-          with open(events_path, "w") as f:
-              f.write(updated_content)
-
-          print(f"Updated {events_path} with event '{event_id}'")
+          print(f"Created {output_path}")
 
           # Set outputs for next step
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write(f"event_id={event_id}\n")
               out.write(f"book_slug={book_slug}\n")
+              out.write(f"file_path={output_path}\n")
           EOF
 
-      - name: Commit and push updated events file
+      - name: Commit and push new event file
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add src/data/events.ts
+          git add src/content/events/
           git commit -m "feat: add event '${{ steps.update-events.outputs.event_id }}' for book '${{ steps.update-events.outputs.book_slug }}' from issue #${{ github.event.issue.number }}"
           git push
 
@@ -145,7 +135,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `✅ Event **${{ steps.update-events.outputs.event_id }}** for book \`${{ steps.update-events.outputs.book_slug }}\` has been added!\n\nFile updated: \`src/data/events.ts\`\n\nThe event will appear on the site after the next deployment.`
+              body: `✅ Event **${{ steps.update-events.outputs.event_id }}** for book \`${{ steps.update-events.outputs.book_slug }}\` has been added!\n\nFile created: \`${{ steps.update-events.outputs.file_path }}\`\n\nThe event will appear on the site after the next deployment.`
             });
 
       - name: Close issue
