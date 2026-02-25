@@ -6,29 +6,17 @@ import ContactForm from "@/components/ContactForm";
 
 const foundingMembers = [
   {
-    name: "Eleanor Whitmore",
+    name: "Abdurrahman Rajab",
     role: "Founder & Lead Curator",
-    bio: "A former librarian with a passion for literary fiction, Eleanor started the club in her living room with just five friends and a shared love of storytelling.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face"
+    bio: "A software engineer with a passion for community, development, and learning. Abdurrahman started the club in the university with his friends and a shared love for tech.",
+    avatar: "github.com/a0m0rajab.png"
   },
   {
-    name: "Marcus Chen",
+    name: "Adnan Fahed",
     role: "Discussion Facilitator",
-    bio: "English professor turned book evangelist, Marcus brings academic depth while keeping conversations accessible and engaging for all readers.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+    bio: "Software engineer with passion for new technologies, who love to share his experience with the community",
+    avatar: "github.com/adnanjpg.png"
   },
-  {
-    name: "Sofia Rodriguez",
-    role: "Events Coordinator",
-    bio: "With a background in event planning and a shelf full of dog-eared paperbacks, Sofia ensures every gathering feels like coming home.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
-  },
-  {
-    name: "James Okonkwo",
-    role: "Community Builder",
-    bio: "A social worker by day and voracious reader by night, James champions diverse voices and ensures our selections reflect the world we live in.",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-  }
 ];
 
 const values = [
