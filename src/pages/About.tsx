@@ -9,13 +9,13 @@ const foundingMembers = [
     name: "Abdurrahman Rajab",
     role: "Founder & Lead Curator",
     bio: "A software engineer with a passion for community, development, and learning. Abdurrahman started the club in the university with his friends and a shared love for tech.",
-    avatar: "github.com/a0m0rajab.png"
+    avatar: "https://github.com/a0m0rajab.png"
   },
   {
     name: "Adnan Fahed",
     role: "Discussion Facilitator",
     bio: "Software engineer with passion for new technologies, who love to share his experience with the community",
-    avatar: "github.com/adnanjpg.png"
+    avatar: "https://github.com/adnanjpg.png"
   },
 ];
 
