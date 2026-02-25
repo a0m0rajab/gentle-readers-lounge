@@ -1,0 +1,81 @@
+name: "Add New Book Event"
+description: "Submit a new event for an existing book in the Gentle Readers Lounge."
+title: "[Event]: "
+labels:
+  - "add-event"
+body:
+  - type: input
+    id: book_slug
+    attributes:
+      label: Book Slug
+      description: "The slug of the book this event belongs to (must match an existing book file)"
+      placeholder: "e.g. the-midnight-library"
+    validations:
+      required: true
+
+  - type: input
+    id: event_id
+    attributes:
+      label: Event ID
+      description: "Unique identifier for this event (e.g. midnight-library-mar-2025)"
+      placeholder: "e.g. midnight-library-mar-2025"
+    validations:
+      required: true
+
+  - type: input
+    id: date
+    attributes:
+      label: Event Date
+      description: "Full date of the event (e.g. March 20, 2025)"
+      placeholder: "e.g. March 20, 2025"
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      placeholder: "e.g. Inkwell Café, Downtown"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Event Description
+      description: "A short description of the event."
+      placeholder: "Describe what happened at the event..."
+    validations:
+      required: true
+
+  - type: input
+    id: attendee_count
+    attributes:
+      label: Attendee Count
+      placeholder: "e.g. 24"
+    validations:
+      required: true
+
+  - type: textarea
+    id: attendees
+    attributes:
+      label: Attendees
+      description: "Enter one attendee per line in the format: Full Name"
+      placeholder: |
+        Sarah Mitchell
+        James Chen
+        Olivia Rose
+    validations:
+      required: true
+
+  - type: textarea
+    id: highlights
+    attributes:
+      label: Event Highlights
+      description: "Enter each highlight on its own line."
+      placeholder: |
+        Discussed the central themes of identity and loss
+        Explored the author's use of magical realism
+        Members shared personal connections to the story
+    validations:
+      required: true

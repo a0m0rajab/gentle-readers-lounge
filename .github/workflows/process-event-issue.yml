@@ -1,0 +1,151 @@
+name: Process New Event Issue
+
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  add-event:
+    if: github.event.label.name == 'add-event'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Parse issue and create event MDX file
+        id: update-events
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 << 'EOF'
+          import os
+          import re
+          import sys
+
+          body = os.environ.get("ISSUE_BODY", "")
+
+          def extract_field(label, text):
+              """Extract field value from GitHub issue form body."""
+              pattern = rf"### {re.escape(label)}\s*\n+(.+?)(?=\n###|\Z)"
+              match = re.search(pattern, text, re.DOTALL)
+              if match:
+                  return match.group(1).strip()
+              return ""
+
+          book_slug = extract_field("Book Slug", body)
+          event_id = extract_field("Event ID", body)
+          date = extract_field("Event Date", body)
+          location = extract_field("Location", body)
+          description = extract_field("Event Description", body)
+          attendee_count = extract_field("Attendee Count", body)
+          attendees_raw = extract_field("Attendees", body)
+          highlights_raw = extract_field("Event Highlights", body)
+
+          # Validate required fields
+          if not all([book_slug, event_id, date, location, description,
+                      attendee_count, attendees_raw, highlights_raw]):
+              print("ERROR: Missing required fields in issue body.")
+              print(f"book_slug: {book_slug!r}")
+              print(f"event_id: {event_id!r}")
+              sys.exit(1)
+
+          # Parse attendees (one name per line)
+          attendee_names = [a.strip() for a in attendees_raw.splitlines() if a.strip()]
+
+          # Parse highlights (one per line)
+          highlights = [h.strip() for h in highlights_raw.splitlines() if h.strip()]
+
+          def make_initials(name):
+              parts = name.split()
+              if len(parts) >= 2:
+                  return parts[0][0].upper() + parts[-1][0].upper()
+              return name[:2].upper()
+
+          def yaml_str(value):
+              escaped = value.replace('"', '\\"')
+              return f'"{escaped}"'
+
+          def yaml_list(items, indent=2):
+              prefix = " " * indent
+              return "\n".join(f"{prefix}- {yaml_str(item)}" for item in items)
+
+          # Build attendees YAML block
+          attendees_yaml = ""
+          for name in attendee_names:
+              initials = make_initials(name)
+              attendees_yaml += f'  - name: {yaml_str(name)}\n    initials: "{initials}"\n'
+          attendees_yaml = attendees_yaml.rstrip()
+
+          frontmatter = f"""---
+          bookSlug: {yaml_str(book_slug)}
+          date: {yaml_str(date)}
+          location: {yaml_str(location)}
+          description: {yaml_str(description)}
+          attendeeCount: {attendee_count}
+          attendees:
+          {attendees_yaml}
+          photos: []
+          highlights:
+          {yaml_list(highlights)}
+          ---"""
+
+          import textwrap
+          frontmatter = textwrap.dedent(frontmatter)
+
+          mdx_content = f"{frontmatter}\n"
+
+          output_path = f"src/content/events/{event_id}.mdx"
+          os.makedirs(os.path.dirname(output_path), exist_ok=True)
+          with open(output_path, "w") as f:
+              f.write(mdx_content)
+
+          print(f"Created {output_path}")
+
+          # Set outputs for next step
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"event_id={event_id}\n")
+              out.write(f"book_slug={book_slug}\n")
+              out.write(f"file_path={output_path}\n")
+          EOF
+
+      - name: Commit and push new event file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/content/events/
+          git commit -m "feat: add event '${{ steps.update-events.outputs.event_id }}' for book '${{ steps.update-events.outputs.book_slug }}' from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Event **${{ steps.update-events.outputs.event_id }}** for book \`${{ steps.update-events.outputs.book_slug }}\` has been added!\n\nFile created: \`${{ steps.update-events.outputs.file_path }}\`\n\nThe event will appear on the site after the next deployment.`
+            });
+
+      - name: Close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.update({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              state_reason: 'completed'
+            });

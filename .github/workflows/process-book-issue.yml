@@ -1,0 +1,171 @@
+name: Process New Book Issue
+
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  add-book:
+    if: github.event.label.name == 'add-book'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Parse issue and create MDX file
+        id: create-mdx
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          python3 << 'EOF'
+          import os
+          import re
+          import sys
+
+          body = os.environ.get("ISSUE_BODY", "")
+          issue_number = os.environ.get("ISSUE_NUMBER", "")
+
+          def extract_field(label, text):
+              """Extract field value from GitHub issue form body."""
+              pattern = rf"### {re.escape(label)}\s*\n+(.+?)(?=\n###|\Z)"
+              match = re.search(pattern, text, re.DOTALL)
+              if match:
+                  return match.group(1).strip()
+              return ""
+
+          title = extract_field("Book Title", body)
+          author = extract_field("Author", body)
+          genre = extract_field("Genre", body)
+          month = extract_field("Reading Month", body)
+          meeting_date = extract_field("Meeting Date", body)
+          page_count = extract_field("Page Count", body)
+          reader_count = extract_field("Expected Reader Count", body)
+          is_current = extract_field("Is this the current book?", body)
+          color = extract_field("Cover Color (Tailwind gradient)", body)
+          cover_image = extract_field("Cover Image URL", body)
+          description = extract_field("Book Description", body)
+          questions_raw = extract_field("Discussion Questions", body)
+          themes_raw = extract_field("Themes", body)
+          slug = extract_field("URL Slug", body)
+
+          # Validate required fields
+          if not all([title, author, genre, month, meeting_date, page_count,
+                      reader_count, is_current, color, description, questions_raw, slug]):
+              print("ERROR: Missing required fields in issue body.")
+              print(f"Title: {title!r}")
+              print(f"Author: {author!r}")
+              print(f"Slug: {slug!r}")
+              sys.exit(1)
+
+          # Parse discussion questions (one per line)
+          questions = [q.strip() for q in questions_raw.splitlines() if q.strip()]
+
+          # Parse themes (one per line)
+          themes = [t.strip() for t in themes_raw.splitlines() if t.strip()] if themes_raw else []
+
+          # Build YAML frontmatter
+          def yaml_str(value):
+              escaped = value.replace('"', '\\"')
+              return f'"{escaped}"'
+
+          def yaml_list(items, indent=2):
+              prefix = " " * indent
+              return "\n".join(f"{prefix}- {yaml_str(item)}" for item in items)
+
+          cover_line = f"\ncoverImage: {yaml_str(cover_image)}" if cover_image and cover_image not in ("_No response_", "") else ""
+          themes_block = f"\nthemes:\n{yaml_list(themes)}" if themes else ""
+
+          frontmatter = f"""---
+          title: {yaml_str(title)}
+          author: {yaml_str(author)}
+          genre: {yaml_str(genre)}
+          month: {yaml_str(month)}
+          pageCount: {page_count}
+          readerCount: {reader_count}
+          isCurrent: {is_current}
+          color: {yaml_str(color)}{cover_line}
+          meetingDate: {yaml_str(meeting_date)}
+          description: {yaml_str(description)}
+          discussionQuestions:
+          {yaml_list(questions)}{themes_block}
+          ---
+          """.strip()
+
+          # Dedent frontmatter (remove leading spaces added by heredoc)
+          import textwrap
+          frontmatter = textwrap.dedent(frontmatter)
+
+          mdx_content = f"""{frontmatter}
+
+          import {{ BookQuote, ReadingNote, Spoiler, ThemeTag }} from "@/components/mdx/MDXComponents";
+
+          ## About This Selection
+
+          *{title}* by {author} is our {month} selection.
+
+          ## Discussion Questions
+
+          {chr(10).join(f'{i+1}. {q}' for i, q in enumerate(questions))}
+
+          ---
+
+          *Meeting scheduled for {meeting_date}.*
+          """
+
+          # Write the MDX file
+          output_path = f"src/content/books/{slug}.mdx"
+          os.makedirs(os.path.dirname(output_path), exist_ok=True)
+          with open(output_path, "w") as f:
+              f.write(mdx_content)
+
+          print(f"Created {output_path}")
+
+          # Set output for next step
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"slug={slug}\n")
+              out.write(f"title={title}\n")
+              out.write(f"file_path={output_path}\n")
+          EOF
+
+      - name: Commit and push new book file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/content/books/
+          git commit -m "feat: add book '${{ steps.create-mdx.outputs.title }}' from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Book **${{ steps.create-mdx.outputs.title }}** has been added!\n\nFile created: \`${{ steps.create-mdx.outputs.file_path }}\`\n\nThe book will appear on the site after the next deployment.`
+            });
+
+      - name: Close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.update({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              state_reason: 'completed'
+            });
