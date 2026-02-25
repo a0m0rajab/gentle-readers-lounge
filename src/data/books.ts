@@ -28,8 +28,7 @@ export interface Book {
   highlight?: string;
 }
 
-interface MDXBookModule {
-  default: React.ComponentType;
+interface MDXFrontmatter {
   title: string;
   author: string;
   genre: string;
@@ -55,6 +54,11 @@ interface MDXBookModule {
   highlight?: string;
 }
 
+interface MDXBookModule {
+  default: React.ComponentType;
+  frontmatter: MDXFrontmatter;
+}
+
 // Eagerly load all MDX book files
 const mdxModules = import.meta.glob<MDXBookModule>(
   "../content/books/*.mdx",
@@ -66,33 +70,34 @@ const booksUnsorted: Book[] = Object.entries(mdxModules).map(
   ([path, mod], index) => {
     // Extract slug from file path: "../content/books/the-phoenix-project.mdx" -> "the-phoenix-project"
     const slug = path.replace("../content/books/", "").replace(".mdx", "");
+    const fm = mod.frontmatter;
 
     return {
       id: index + 1,
       slug,
-      title: mod.title,
-      author: mod.author,
-      genre: mod.genre,
-      month: mod.month,
-      pageCount: mod.pageCount,
-      readerCount: mod.readerCount,
-      isCurrent: mod.isCurrent ?? false,
-      color: mod.color,
-      meetingDate: mod.meetingDate,
-      coverImage: mod.coverImage,
-      description: mod.description,
-      discussionQuestions: mod.discussionQuestions ?? [],
-      totalAttendees: mod.totalAttendees,
-      averageRating: mod.averageRating,
-      totalDiscussions: mod.totalDiscussions,
-      readingTime: mod.readingTime,
-      completionRate: mod.completionRate,
-      topContributor: mod.topContributor,
-      firstTimers: mod.firstTimers,
-      regulars: mod.regulars,
-      veterans: mod.veterans,
-      themes: mod.themes,
-      highlight: mod.highlight,
+      title: fm.title,
+      author: fm.author,
+      genre: fm.genre,
+      month: fm.month,
+      pageCount: fm.pageCount,
+      readerCount: fm.readerCount,
+      isCurrent: fm.isCurrent ?? false,
+      color: fm.color,
+      meetingDate: fm.meetingDate,
+      coverImage: fm.coverImage,
+      description: fm.description,
+      discussionQuestions: fm.discussionQuestions ?? [],
+      totalAttendees: fm.totalAttendees,
+      averageRating: fm.averageRating,
+      totalDiscussions: fm.totalDiscussions,
+      readingTime: fm.readingTime,
+      completionRate: fm.completionRate,
+      topContributor: fm.topContributor,
+      firstTimers: fm.firstTimers,
+      regulars: fm.regulars,
+      veterans: fm.veterans,
+      themes: fm.themes,
+      highlight: fm.highlight,
     };
   }
 );
