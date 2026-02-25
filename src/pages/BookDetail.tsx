@@ -15,7 +15,7 @@ import SEO from "@/components/SEO";
 const BookDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const book = getBookBySlug(slug || "");
-  console.log("[BookDetail] slug:", slug, "book:", JSON.stringify(book, null, 2));
+  
   const stats = getBookStats(slug || "");
   const event = getEventByBookSlug(slug || "");
   const allBooks = getAllBooks();
