@@ -1,79 +1,89 @@
 
 
-## How Books Work Today
+## Plan: Merge All Hardcoded Book Data into MDX Frontmatter
 
-Adding a new book currently requires editing **two separate files**:
+Three separate hardcoded data sources need to be consolidated into the MDX frontmatter:
 
-1. **`src/data/books.ts`** — Add all metadata (title, author, slug, genre, pageCount, readerCount, description, discussionQuestions, meetingDate, color, isCurrent, coverImage import)
-2. **`src/content/books/{slug}.mdx`** — Write the rich content (themes, reviews, discussion highlights, reading companion)
+1. **`src/data/bookStats.ts`** — stats like totalAttendees, averageRating, completionRate, etc.
+2. **`ReadingGuides.tsx` → `bookThemes`** — theme tag arrays per book
+3. **`ReadingGuides.tsx` → `bookHighlights`** — discussion highlight strings per book
 
-Plus optionally importing a cover image in the data file. This is error-prone and duplicative.
+### New frontmatter fields per MDX file
 
----
+Each book's MDX frontmatter gains these new fields:
 
-## Proposed Simplification: MDX Frontmatter as Single Source of Truth
+```yaml
+# Stats (from bookStats.ts)
+totalAttendees: 18
+averageRating: 4.4
+totalDiscussions: 2
+readingTime: "2.5 weeks"
+completionRate: 92
+topContributor: "Marcus T."
+firstTimers: 6
+regulars: 8
+veterans: 4
 
-Consolidate everything into a single MDX file per book using frontmatter for metadata.
-
-### New MDX file format
-
-Each book file (`src/content/books/{slug}.mdx`) becomes:
-
-```text
----
-title: "The Phoenix Project"
-author: "Gene Kim, Kevin Behr & George Spafford"
-genre: "Business Fiction"
-month: "Jan 2025"
-pageCount: 382
-readerCount: 18
-isCurrent: true
-color: "from-orange-600 via-red-600 to-orange-800"
-meetingDate: "January 18, 2025"
-coverImage: "/covers/the-phoenix-project.jpg"
-description: "A novel about IT, DevOps..."
-discussionQuestions:
-  - "How does the story illustrate..."
-  - "What parallels do you see..."
----
-
-import { BookQuote, ReadingNote } from "@/components/mdx/MDXComponents";
-
-## About This Selection
-...rest of MDX content...
+# Reading Guides metadata (from ReadingGuides.tsx)
+themes:
+  - "DevOps"
+  - "IT Management"
+  - "Business Fiction"
+highlight: "The story illustrates how IT principles mirror manufacturing..."
 ```
 
-### Changes required
+The nested `attendeeBreakdown` object is flattened to three top-level fields (`firstTimers`, `regulars`, `veterans`) since YAML frontmatter works best with flat structures and `remark-mdx-frontmatter` exports them as simple named values.
 
-1. **Install `gray-matter`** — Parse YAML frontmatter from MDX files at build time.
+### Files to modify
 
-2. **Add `remark-frontmatter`** — So the MDX compiler strips frontmatter from rendered output (prevents it showing as text).
-
-3. **Create `src/data/books-loader.ts`** — A new module that uses `import.meta.glob` with `{ eager: true }` to load all MDX modules, extract frontmatter metadata, and export the same `books` array plus helper functions (`getAllBooks`, `getBookBySlug`, etc.) that the rest of the app already uses.
-
-4. **Move cover images to `public/covers/`** — Reference them as simple strings (`"/covers/the-phoenix-project.jpg"`) instead of requiring TypeScript imports in a data file.
-
-5. **Update `src/data/books.ts`** — Replace the hardcoded array with re-exports from the loader, keeping the same API so nothing else breaks.
-
-6. **Update `src/pages/BookDetail.tsx`** — Minor adjustment: frontmatter is already available from the MDX module, so no separate data lookup is needed (but we keep backward compatibility).
-
-7. **Update `plugins/sitemap-plugin.ts`** — The regex approach still works since slugs come from filenames.
-
-8. **Convert existing MDX files** — Add frontmatter blocks to all 10 existing MDX files, pulling metadata from the current `books.ts`.
-
-### How to add a book after this change
-
-One step: create a single MDX file with frontmatter + content. No other files to edit. The book automatically appears in the library, carousel, sitemap, and detail pages.
-
-### Files to create/modify
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `src/content/books/*.mdx` (10 files) | Add frontmatter metadata |
-| `src/data/books-loader.ts` | Create — glob MDX, extract metadata |
-| `src/data/books.ts` | Simplify — re-export from loader |
-| `src/pages/BookDetail.tsx` | Minor update for frontmatter access |
-| `public/covers/*` | Move 3 images from `src/assets/covers/` |
-| `package.json` | Add `gray-matter`, `remark-frontmatter` |
-| `vite.config.ts` | Add remark-frontmatter to MDX plugin config |
+| `src/content/books/*.mdx` (10 files) | Add stats, themes, highlight fields to frontmatter |
+| `src/data/books.ts` | Expand `Book` interface and `MDXBookModule` to include new fields; export stats/themes/highlight as part of the book object |
+| `src/types/mdx.d.ts` | Add new named exports for the new frontmatter fields |
+| `src/pages/ReadingGuides.tsx` | Remove hardcoded `bookThemes`, `bookHighlights`, and `bookStats` import; read from `books` array instead |
+| `src/pages/BookDetail.tsx` | Remove `getBookStats` import; build stats object from book fields |
+| `src/components/BookStats.tsx` | No changes needed (interface stays the same, just receives data differently) |
+
+### Files to delete
+
+| File | Reason |
+|------|--------|
+| `src/data/bookStats.ts` | All data moves into MDX frontmatter |
+
+### How data flows after the change
+
+```text
+MDX frontmatter → import.meta.glob → books array (with stats/themes/highlight)
+                                        ↓
+                            ReadingGuides.tsx reads book.themes, book.highlight
+                            BookDetail.tsx builds BookStatsData from book fields
+```
+
+### Detail on key changes
+
+**`src/data/books.ts`** — The `Book` interface gains:
+```ts
+totalAttendees?: number;
+averageRating?: number;
+totalDiscussions?: number;
+readingTime?: string;
+completionRate?: number;
+topContributor?: string;
+firstTimers?: number;
+regulars?: number;
+veterans?: number;
+themes?: string[];
+highlight?: string;
+```
+
+A new helper `getBookStats(slug)` is exported from this file to construct the `BookStatsData` shape from the flat fields, keeping the `BookStats` component unchanged.
+
+**`src/pages/ReadingGuides.tsx`** — The two hardcoded objects and the `bookStats` import are removed. The template reads `book.themes`, `book.highlight`, and `book.totalAttendees` directly.
+
+**`src/pages/BookDetail.tsx`** — Replaces `import { getBookStats } from "@/data/bookStats"` with the new helper from `books.ts`.
+
+### Result
+
+After this change, adding a new book with full stats, themes, and highlights requires editing only one MDX file. Zero separate data files.
 
