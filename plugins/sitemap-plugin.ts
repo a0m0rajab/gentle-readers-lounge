@@ -15,24 +15,25 @@ const STATIC_ROUTES = [
   "/guides",
 ];
 
-const BOOK_SLUGS = [
-  "the-phoenix-project",
-  "how-google-works",
-  "refactoring-ui",
-  "the-house-of-spirits",
-  "circe",
-  "beloved",
-  "the-secret-history",
-  "pachinko",
-  "one-hundred-years-of-solitude",
-  "the-remains-of-the-day",
-];
+function getBookSlugs(): string[] {
+  const booksFile = fs.readFileSync(
+    nodePath.resolve(__dirname, "../src/data/books.ts"),
+    "utf-8"
+  );
+  const slugs: string[] = [];
+  const re = /slug:\s*["']([^"']+)["']/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(booksFile)) !== null) {
+    slugs.push(match[1]);
+  }
+  return slugs;
+}
 
 function buildSitemap(): string {
   const today = new Date().toISOString().split("T")[0];
   const allUrls = [
     ...STATIC_ROUTES.map((r) => ({ loc: `${BASE_URL}${r}`, priority: r === "/" ? "1.0" : "0.8" })),
-    ...BOOK_SLUGS.map((slug) => ({ loc: `${BASE_URL}/book/${slug}`, priority: "0.7" })),
+    ...getBookSlugs().map((slug) => ({ loc: `${BASE_URL}/book/${slug}`, priority: "0.7" })),
   ];
 
   const entries = allUrls
