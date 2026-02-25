@@ -69,7 +69,7 @@ const EventCard = ({ event, index, onPhotoClick }: EventCardProps) => {
             </div>
             {book && (
               <Link 
-                to={`/book/${book.slug}`}
+                to={`/event/${event.id}`}
                 className="font-serif text-2xl lg:text-3xl text-foreground hover:text-primary transition-colors"
               >
                 {book.title}

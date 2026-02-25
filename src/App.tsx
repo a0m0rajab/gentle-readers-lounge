@@ -12,6 +12,7 @@ import Membership from "./pages/Membership";
 import Contact from "./pages/Contact";
 import Nominate from "./pages/Nominate";
 import ReadingGuides from "./pages/ReadingGuides";
+import EventDetail from "./pages/EventDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/books" element={<Books />} />
           <Route path="/book/:slug" element={<BookDetail />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/event/:id" element={<EventDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/contact" element={<Contact />} />

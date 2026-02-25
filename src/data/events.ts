@@ -63,6 +63,17 @@ export const events: BookEvent[] = Object.entries(mdxModules).map(
   }
 );
 
+export const getEventById = (id: string): BookEvent | undefined => {
+  return events.find(event => event.id === id);
+};
+
+export const getEventMDXComponent = (id: string): React.ComponentType | null => {
+  const entry = Object.entries(mdxModules).find(
+    ([path]) => path.replace("../content/events/", "").replace(".mdx", "") === id
+  );
+  return entry ? entry[1].default : null;
+};
+
 export const getEventByBookSlug = (bookSlug: string): BookEvent | undefined => {
   return events.find(event => event.bookSlug === bookSlug);
 };
