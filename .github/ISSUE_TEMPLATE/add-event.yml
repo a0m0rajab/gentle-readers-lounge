@@ -1,0 +1,99 @@
+name: Add Book Event
+description: Submit a new book club event to be added to the Gentle Readers Lounge
+title: "[Event]: "
+labels: ["event"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for submitting a new book event! Please fill in the details below.
+
+  - type: input
+    id: book-slug
+    attributes:
+      label: Book Slug
+      description: The slug of the book this event is for (e.g. `beloved`, `circe`, `the-secret-history`)
+      placeholder: e.g. beloved
+    validations:
+      required: true
+
+  - type: input
+    id: event-date
+    attributes:
+      label: Event Date
+      description: The date the event took place
+      placeholder: e.g. October 20, 2024
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Where the event was held
+      placeholder: e.g. Inkwell Café, Downtown
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A short description of the event
+      placeholder: e.g. An intimate evening discussing Toni Morrison's powerful masterpiece...
+    validations:
+      required: false
+
+  - type: input
+    id: attendee-count
+    attributes:
+      label: Attendee Count
+      description: Total number of attendees
+      placeholder: e.g. 28
+    validations:
+      required: true
+
+  - type: textarea
+    id: attendees
+    attributes:
+      label: Attendees
+      description: |
+        List each attendee on a separate line in the format: `Name | Initials`
+        Example:
+        ```
+        Sarah Mitchell | SM
+        James Chen | JC
+        ```
+      placeholder: |
+        Sarah Mitchell | SM
+        James Chen | JC
+    validations:
+      required: false
+
+  - type: textarea
+    id: photos
+    attributes:
+      label: Photos
+      description: |
+        List photo URLs with optional captions on separate lines in the format: `URL | Caption | featured` (mark one as `featured` to highlight it)
+        Example:
+        ```
+        https://example.com/photo1.jpg | Setting up for the evening | featured
+        https://example.com/photo2.jpg | Deep in discussion
+        ```
+      placeholder: |
+        https://example.com/photo1.jpg | Setting up for the evening | featured
+        https://example.com/photo2.jpg | Deep in discussion
+    validations:
+      required: false
+
+  - type: textarea
+    id: highlights
+    attributes:
+      label: Event Highlights
+      description: List the key discussion highlights, one per line
+      placeholder: |
+        Explored the symbolism of water throughout the novel
+        Discussed the role of community in healing
+    validations:
+      required: false
