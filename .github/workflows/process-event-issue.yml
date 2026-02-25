@@ -51,6 +51,9 @@ jobs:
           attendee_count = extract_field("Attendee Count", body)
           attendees_raw = extract_field("Attendees", body)
           highlights_raw = extract_field("Event Highlights", body)
+          images_raw = extract_field("Photo URLs", body)
+          captions_raw = extract_field("Photo Captions", body)
+          featured_raw = extract_field("Featured Photo Number", body)
 
           # Validate required fields
           if not all([book_slug, event_id, date, location, description,
@@ -65,6 +68,14 @@ jobs:
 
           # Parse highlights (one per line)
           highlights = [h.strip() for h in highlights_raw.splitlines() if h.strip()]
+
+          # Parse photos
+          image_urls = [u.strip() for u in images_raw.splitlines() if u.strip()] if images_raw and images_raw not in ("_No response_", "") else []
+          captions = [c.strip() for c in captions_raw.splitlines() if c.strip()] if captions_raw and captions_raw not in ("_No response_", "") else []
+          try:
+              featured_index = int(featured_raw.strip()) if featured_raw and featured_raw not in ("_No response_", "") else 1
+          except ValueError:
+              featured_index = 1
 
           def make_initials(name):
               parts = name.split()
@@ -87,6 +98,21 @@ jobs:
               attendees_yaml += f'  - name: {yaml_str(name)}\n    initials: "{initials}"\n'
           attendees_yaml = attendees_yaml.rstrip()
 
+          # Build photos YAML block
+          if image_urls:
+              photos_yaml = ""
+              for i, url in enumerate(image_urls):
+                  caption = captions[i] if i < len(captions) else ""
+                  is_featured = (i + 1) == featured_index
+                  photos_yaml += f'  - url: {yaml_str(url)}\n'
+                  if caption:
+                      photos_yaml += f'    caption: {yaml_str(caption)}\n'
+                  if is_featured:
+                      photos_yaml += f'    featured: true\n'
+              photos_block = f"photos:\n{photos_yaml.rstrip()}"
+          else:
+              photos_block = "photos: []"
+
           frontmatter = f"""---
           bookSlug: {yaml_str(book_slug)}
           date: {yaml_str(date)}
@@ -95,7 +121,7 @@ jobs:
           attendeeCount: {attendee_count}
           attendees:
           {attendees_yaml}
-          photos: []
+          {photos_block}
           highlights:
           {yaml_list(highlights)}
           ---"""
