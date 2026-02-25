@@ -1,0 +1,44 @@
+name: CI Build & Validate
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_lint:
+        description: "Run ESLint checks"
+        required: false
+        default: "true"
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        if: ${{ inputs.run_lint == 'true' }}
+        run: npx eslint . --max-warnings 0
+
+      - name: Build
+        run: npm run build
+
+      - name: Report build size
+        run: |
+          echo "## Build Output" >> $GITHUB_STEP_SUMMARY
+          du -sh dist/ >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### File count" >> $GITHUB_STEP_SUMMARY
+          find dist -type f | wc -l >> $GITHUB_STEP_SUMMARY
