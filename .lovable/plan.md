@@ -1,89 +1,129 @@
 
 
-## Plan: Merge All Hardcoded Book Data into MDX Frontmatter
+## Plan: Convert Events to MDX Files
 
-Three separate hardcoded data sources need to be consolidated into the MDX frontmatter:
+### Problem
+Event data is hardcoded in `src/data/events.ts`. Following the established pattern where MDX frontmatter is the single source of truth, events should also live in MDX files.
 
-1. **`src/data/bookStats.ts`** — stats like totalAttendees, averageRating, completionRate, etc.
-2. **`ReadingGuides.tsx` → `bookThemes`** — theme tag arrays per book
-3. **`ReadingGuides.tsx` → `bookHighlights`** — discussion highlight strings per book
+### Approach
+Create MDX files in `src/content/events/` with all event metadata in YAML frontmatter, including nested arrays (attendees, photos). Load them via `import.meta.glob` just like books.
 
-### New frontmatter fields per MDX file
+### New directory: `src/content/events/`
 
-Each book's MDX frontmatter gains these new fields:
+One MDX file per event, named by event ID:
+
+| File | Source Event |
+|------|-------------|
+| `beloved-oct-2024.mdx` | Beloved discussion |
+| `circe-nov-2024.mdx` | Circe discussion |
+| `secret-history-sep-2024.mdx` | The Secret History discussion |
+| `solitude-aug-2024.mdx` | One Hundred Years of Solitude discussion |
+| `remains-jul-2024.mdx` | The Remains of the Day discussion |
+| `pachinko-jun-2024.mdx` | Pachinko discussion |
+
+### Frontmatter structure
+
+Each event MDX file will contain YAML frontmatter like:
 
 ```yaml
-# Stats (from bookStats.ts)
-totalAttendees: 18
-averageRating: 4.4
-totalDiscussions: 2
-readingTime: "2.5 weeks"
-completionRate: 92
-topContributor: "Marcus T."
-firstTimers: 6
-regulars: 8
-veterans: 4
+---
+bookSlug: "beloved"
+date: "October 20, 2024"
+location: "Inkwell Café, Downtown"
+description: "An intimate evening discussing..."
+attendeeCount: 28
+attendees:
+  - name: "Sarah Mitchell"
+    initials: "SM"
+  - name: "James Chen"
+    initials: "JC"
+photos:
+  - url: "https://images.unsplash.com/..."
+    caption: "Setting up for the evening"
+    featured: true
+  - url: "https://images.unsplash.com/..."
+    caption: "Deep in discussion"
+highlights:
+  - "Explored the symbolism of water throughout the novel"
+  - "Discussed the role of community in healing"
+---
 
-# Reading Guides metadata (from ReadingGuides.tsx)
-themes:
-  - "DevOps"
-  - "IT Management"
-  - "Business Fiction"
-highlight: "The story illustrates how IT principles mirror manufacturing..."
+Optional MDX body content for richer event writeups in the future.
 ```
 
-The nested `attendeeBreakdown` object is flattened to three top-level fields (`firstTimers`, `regulars`, `veterans`) since YAML frontmatter works best with flat structures and `remark-mdx-frontmatter` exports them as simple named values.
+The `id` field is derived from the filename (same pattern as book slugs). Attendee `id` fields are auto-generated at load time from the array index.
 
 ### Files to modify
 
 | File | Change |
 |------|--------|
-| `src/content/books/*.mdx` (10 files) | Add stats, themes, highlight fields to frontmatter |
-| `src/data/books.ts` | Expand `Book` interface and `MDXBookModule` to include new fields; export stats/themes/highlight as part of the book object |
-| `src/types/mdx.d.ts` | Add new named exports for the new frontmatter fields |
-| `src/pages/ReadingGuides.tsx` | Remove hardcoded `bookThemes`, `bookHighlights`, and `bookStats` import; read from `books` array instead |
-| `src/pages/BookDetail.tsx` | Remove `getBookStats` import; build stats object from book fields |
-| `src/components/BookStats.tsx` | No changes needed (interface stays the same, just receives data differently) |
+| `src/content/events/*.mdx` (6 new files) | Create event MDX files with frontmatter |
+| `src/data/events.ts` | Replace hardcoded array with `import.meta.glob` loader; keep interfaces and helper functions |
+| `src/types/mdx.d.ts` | No change needed (event MDX files are loaded via glob typing, not direct imports) |
 
 ### Files to delete
 
-| File | Reason |
-|------|--------|
-| `src/data/bookStats.ts` | All data moves into MDX frontmatter |
+None. `src/data/events.ts` is kept but refactored to load from MDX instead of hardcoding.
 
-### How data flows after the change
+### Technical detail: `src/data/events.ts` refactoring
+
+The file will:
+1. Keep the `EventAttendee`, `EventPhoto`, and `BookEvent` interfaces unchanged
+2. Replace the hardcoded `events` array with an `import.meta.glob` eager loader for `../content/events/*.mdx`
+3. Map frontmatter to the existing `BookEvent` shape, generating `id` from the filename and attendee `id` from array index
+4. Keep `getEventByBookSlug`, `getAllEvents`, and `getRecentEvents` functions unchanged
+
+```ts
+interface EventFrontmatter {
+  bookSlug: string;
+  date: string;
+  location: string;
+  description?: string;
+  attendeeCount: number;
+  attendees: { name: string; avatar?: string; initials: string }[];
+  photos: { url: string; caption?: string; featured?: boolean }[];
+  highlights?: string[];
+}
+
+interface MDXEventModule {
+  default: React.ComponentType;
+  frontmatter: EventFrontmatter;
+}
+
+const mdxModules = import.meta.glob<MDXEventModule>(
+  "../content/events/*.mdx",
+  { eager: true }
+);
+
+export const events: BookEvent[] = Object.entries(mdxModules).map(
+  ([path, mod]) => {
+    const id = path.replace("../content/events/", "").replace(".mdx", "");
+    const fm = mod.frontmatter;
+    return {
+      id,
+      bookSlug: fm.bookSlug,
+      date: fm.date,
+      location: fm.location,
+      description: fm.description,
+      attendeeCount: fm.attendeeCount,
+      attendees: fm.attendees.map((a, i) => ({ id: String(i + 1), ...a })),
+      photos: fm.photos.map((p, i) => ({ id: `${id}-${i}`, ...p })),
+      highlights: fm.highlights,
+    };
+  }
+);
+```
+
+### Data flow after the change
 
 ```text
-MDX frontmatter → import.meta.glob → books array (with stats/themes/highlight)
-                                        ↓
-                            ReadingGuides.tsx reads book.themes, book.highlight
-                            BookDetail.tsx builds BookStatsData from book fields
+MDX frontmatter (src/content/events/*.mdx)
+  → import.meta.glob (eager)
+  → events array (BookEvent[])
+  → getEventByBookSlug / getAllEvents / getRecentEvents
+  → Events.tsx, BookDetail.tsx, EventGallery.tsx (unchanged)
 ```
 
-### Detail on key changes
-
-**`src/data/books.ts`** — The `Book` interface gains:
-```ts
-totalAttendees?: number;
-averageRating?: number;
-totalDiscussions?: number;
-readingTime?: string;
-completionRate?: number;
-topContributor?: string;
-firstTimers?: number;
-regulars?: number;
-veterans?: number;
-themes?: string[];
-highlight?: string;
-```
-
-A new helper `getBookStats(slug)` is exported from this file to construct the `BookStatsData` shape from the flat fields, keeping the `BookStats` component unchanged.
-
-**`src/pages/ReadingGuides.tsx`** — The two hardcoded objects and the `bookStats` import are removed. The template reads `book.themes`, `book.highlight`, and `book.totalAttendees` directly.
-
-**`src/pages/BookDetail.tsx`** — Replaces `import { getBookStats } from "@/data/bookStats"` with the new helper from `books.ts`.
-
-### Result
-
-After this change, adding a new book with full stats, themes, and highlights requires editing only one MDX file. Zero separate data files.
+### Consumer impact
+Zero. The `BookEvent` interface and all helper functions keep the same signatures. `Events.tsx`, `BookDetail.tsx`, and `EventGallery.tsx` require no changes.
 
