@@ -2,7 +2,7 @@ import type { Plugin } from "vite";
 import fs from "node:fs";
 import nodePath from "node:path";
 
-const BASE_URL = "https://gentlereaders.club";
+const BASE_URL = "https://book.hadithtech.com";
 
 const STATIC_ROUTES = [
   "/",
