@@ -1,0 +1,232 @@
+name: Add a New Book
+description: Submit a new book to be added to the Gentle Readers Lounge reading list.
+title: "[Book]: "
+labels: ["new book"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a book! Please fill in the details below so we can add it to the reading list.
+
+  - type: input
+    id: title
+    attributes:
+      label: Book Title
+      description: The full title of the book.
+      placeholder: "e.g. Circe"
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      description: The author(s) of the book.
+      placeholder: "e.g. Madeline Miller"
+    validations:
+      required: true
+
+  - type: input
+    id: genre
+    attributes:
+      label: Genre
+      description: The genre or category of the book.
+      placeholder: "e.g. Mythological Fiction"
+    validations:
+      required: true
+
+  - type: input
+    id: month
+    attributes:
+      label: Reading Month
+      description: The month and year this book is scheduled to be read (format: Mon YYYY).
+      placeholder: "e.g. Jan 2025"
+    validations:
+      required: true
+
+  - type: input
+    id: meetingDate
+    attributes:
+      label: Meeting Date
+      description: The full date of the book club meeting.
+      placeholder: "e.g. January 18, 2025"
+    validations:
+      required: true
+
+  - type: input
+    id: pageCount
+    attributes:
+      label: Page Count
+      description: The total number of pages in the book.
+      placeholder: "e.g. 393"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Book Description
+      description: A short synopsis or description of the book.
+      placeholder: "Enter a brief description of the book..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: discussionQuestions
+    attributes:
+      label: Discussion Questions
+      description: Provide discussion questions for the book club, one per line.
+      placeholder: |
+        How does the protagonist's journey reflect the central theme?
+        What role does setting play in shaping the narrative?
+        How does the author's style influence your reading experience?
+    validations:
+      required: true
+
+  - type: textarea
+    id: themes
+    attributes:
+      label: Themes
+      description: List the main themes of the book, one per line.
+      placeholder: |
+        Mythology
+        Feminine Power
+        Transformation
+    validations:
+      required: false
+
+  - type: input
+    id: coverImage
+    attributes:
+      label: Cover Image Path
+      description: Path to the cover image (relative to the public folder, e.g. /covers/book-title.jpg). Leave blank if not available.
+      placeholder: "/covers/book-title.jpg"
+    validations:
+      required: false
+
+  - type: input
+    id: color
+    attributes:
+      label: Card Color (Tailwind Gradient)
+      description: Tailwind CSS gradient classes for the book card background.
+      placeholder: "e.g. from-amber-700 to-amber-900"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: isCurrent
+    attributes:
+      label: Is this the current book?
+      description: Should this book be marked as the currently active reading selection?
+      options:
+        - "No"
+        - "Yes"
+      default: 0
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Optional Post-Meeting Stats
+        Fill in these fields after the meeting has taken place.
+
+  - type: input
+    id: readerCount
+    attributes:
+      label: Reader Count
+      description: Number of members who read the book.
+      placeholder: "e.g. 31"
+    validations:
+      required: false
+
+  - type: input
+    id: totalAttendees
+    attributes:
+      label: Total Attendees
+      description: Number of members who attended the meeting.
+      placeholder: "e.g. 31"
+    validations:
+      required: false
+
+  - type: input
+    id: averageRating
+    attributes:
+      label: Average Rating
+      description: Average rating given by members (out of 5).
+      placeholder: "e.g. 4.7"
+    validations:
+      required: false
+
+  - type: input
+    id: totalDiscussions
+    attributes:
+      label: Total Discussion Sessions
+      description: Number of discussion sessions held for this book.
+      placeholder: "e.g. 4"
+    validations:
+      required: false
+
+  - type: input
+    id: readingTime
+    attributes:
+      label: Reading Time
+      description: How long members typically took to read the book.
+      placeholder: "e.g. 2.5 weeks"
+    validations:
+      required: false
+
+  - type: input
+    id: completionRate
+    attributes:
+      label: Completion Rate (%)
+      description: Percentage of members who finished the book.
+      placeholder: "e.g. 94"
+    validations:
+      required: false
+
+  - type: input
+    id: topContributor
+    attributes:
+      label: Top Contributor
+      description: The member who contributed most to the discussion.
+      placeholder: "e.g. Priya S."
+    validations:
+      required: false
+
+  - type: input
+    id: firstTimers
+    attributes:
+      label: First-time Attendees
+      description: Number of members attending for the first time.
+      placeholder: "e.g. 8"
+    validations:
+      required: false
+
+  - type: input
+    id: regulars
+    attributes:
+      label: Regular Attendees
+      description: Number of regular members who attended.
+      placeholder: "e.g. 15"
+    validations:
+      required: false
+
+  - type: input
+    id: veterans
+    attributes:
+      label: Veteran Attendees
+      description: Number of veteran members who attended.
+      placeholder: "e.g. 8"
+    validations:
+      required: false
+
+  - type: textarea
+    id: highlight
+    attributes:
+      label: Meeting Highlight
+      description: A short memorable note or highlight from the meeting.
+      placeholder: "e.g. The meeting ran an extra hour! Members were captivated by..."
+    validations:
+      required: false
