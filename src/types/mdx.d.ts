@@ -16,4 +16,19 @@ declare module "*.mdx" {
   export const coverImage: string | undefined;
   export const description: string;
   export const discussionQuestions: string[];
+
+  // Stats fields
+  export const totalAttendees: number | undefined;
+  export const averageRating: number | undefined;
+  export const totalDiscussions: number | undefined;
+  export const readingTime: string | undefined;
+  export const completionRate: number | undefined;
+  export const topContributor: string | undefined;
+  export const firstTimers: number | undefined;
+  export const regulars: number | undefined;
+  export const veterans: number | undefined;
+
+  // Reading guide fields
+  export const themes: string[] | undefined;
+  export const highlight: string | undefined;
 }
