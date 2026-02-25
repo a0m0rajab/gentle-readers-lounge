@@ -1,9 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, BookOpen, Calendar, Users, ChevronRight, ChevronLeft } from "lucide-react";
 import { MDXProvider } from "@mdx-js/react";
-import { Suspense, lazy, useMemo } from "react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { getBookBySlug, getAllBooks } from "@/data/books";
+import { getBookBySlug, getAllBooks, getBookMDXComponent } from "@/data/books";
 import { getBookStats } from "@/data/bookStats";
 import { getEventByBookSlug } from "@/data/events";
 import { mdxComponents } from "@/components/mdx/MDXComponents";
@@ -13,9 +13,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
-// Dynamic MDX content loader
-const mdxModules = import.meta.glob("../content/books/*.mdx");
-
 const BookDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const book = getBookBySlug(slug || "");
@@ -23,14 +20,10 @@ const BookDetail = () => {
   const event = getEventByBookSlug(slug || "");
   const allBooks = getAllBooks();
 
-  // Dynamically load MDX content
+  // Get the MDX component directly (eagerly loaded)
   const MDXContent = useMemo(() => {
     if (!slug) return null;
-    const modulePath = `../content/books/${slug}.mdx`;
-    if (mdxModules[modulePath]) {
-      return lazy(mdxModules[modulePath] as () => Promise<{ default: React.ComponentType }>);
-    }
-    return null;
+    return getBookMDXComponent(slug);
   }, [slug]);
 
   if (!book) {
@@ -219,16 +212,7 @@ const BookDetail = () => {
             <div className="container mx-auto px-6 lg:px-8">
               <div className="max-w-3xl mx-auto prose-custom">
                 <MDXProvider components={mdxComponents}>
-                  <Suspense fallback={
-                    <div className="animate-pulse space-y-6">
-                      <div className="h-8 bg-muted rounded-lg w-3/4"></div>
-                      <div className="h-4 bg-muted rounded w-full"></div>
-                      <div className="h-4 bg-muted rounded w-5/6"></div>
-                      <div className="h-4 bg-muted rounded w-4/5"></div>
-                    </div>
-                  }>
-                    <MDXContent />
-                  </Suspense>
+                  <MDXContent />
                 </MDXProvider>
               </div>
             </div>

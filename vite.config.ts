@@ -4,6 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import mdx from "@mdx-js/rollup";
 import remarkGfm from "remark-gfm";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import sitemapPlugin from "./plugins/sitemap-plugin";
 
 // https://vitejs.dev/config/
@@ -16,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     {
       enforce: "pre" as const,
       ...mdx({
-        remarkPlugins: [remarkGfm],
+        remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter],
         // Prevent production bundles from calling jsxDEV (dev-only).
         development: mode === "development",
         // Enable MDXProvider components mapping.
