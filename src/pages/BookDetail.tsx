@@ -15,6 +15,7 @@ import SEO from "@/components/SEO";
 const BookDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const book = getBookBySlug(slug || "");
+  console.log("[BookDetail] slug:", slug, "book:", JSON.stringify(book, null, 2));
   const stats = getBookStats(slug || "");
   const event = getEventByBookSlug(slug || "");
   const allBooks = getAllBooks();
@@ -114,10 +115,10 @@ const BookDetail = () => {
                       <div className="text-center px-6">
                         <div className="w-14 h-0.5 bg-accent mx-auto mb-5" />
                         <h1 className="font-serif text-xl md:text-2xl text-primary-foreground leading-tight mb-1">
-                          {book.title.split(' ').slice(0, -1).join(' ')}
+                          {(book.title || "").split(' ').slice(0, -1).join(' ')}
                         </h1>
                         <h1 className="font-serif text-xl md:text-2xl text-accent font-semibold leading-tight">
-                          {book.title.split(' ').slice(-1)}
+                          {(book.title || "").split(' ').slice(-1)}
                         </h1>
                         <div className="w-14 h-0.5 bg-accent mx-auto mt-5" />
                         <p className="font-body text-sm text-primary-foreground/80 mt-5 italic">
