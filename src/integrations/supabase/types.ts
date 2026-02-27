@@ -40,6 +40,8 @@ export type Database = {
       }
       membership_signups: {
         Row: {
+          city: string | null
+          country: string | null
           created_at: string
           email: string
           favorite_genres: string | null
@@ -50,6 +52,8 @@ export type Database = {
           membership_type: string
         }
         Insert: {
+          city?: string | null
+          country?: string | null
           created_at?: string
           email: string
           favorite_genres?: string | null
@@ -60,6 +64,8 @@ export type Database = {
           membership_type: string
         }
         Update: {
+          city?: string | null
+          country?: string | null
           created_at?: string
           email?: string
           favorite_genres?: string | null
