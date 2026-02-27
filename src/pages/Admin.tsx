@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Users, Mail, MessageSquare, LogOut } from "lucide-react";
+import { Users, Mail, MessageSquare, LogOut, Download } from "lucide-react";
 import { format } from "date-fns";
 
 const Admin = () => {
@@ -33,6 +33,22 @@ const Admin = () => {
   }, []);
 
   const formatDate = (d: string) => format(new Date(d), "MMM d, yyyy");
+
+  const exportCSV = (data: any[], filename: string) => {
+    if (!data.length) return;
+    const headers = Object.keys(data[0]);
+    const csv = [
+      headers.join(","),
+      ...data.map(row => headers.map(h => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(","))
+    ].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${filename}-${format(new Date(), "yyyy-MM-dd")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -91,6 +107,11 @@ const Admin = () => {
 
             <TabsContent value="newsletter">
               <Card>
+                <div className="flex justify-end p-4 pb-0">
+                  <Button variant="outline" size="sm" onClick={() => exportCSV(newsletter, "newsletter-signups")}>
+                    <Download className="h-4 w-4 mr-2" /> Export CSV
+                  </Button>
+                </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -115,6 +136,11 @@ const Admin = () => {
 
             <TabsContent value="contacts">
               <Card>
+                <div className="flex justify-end p-4 pb-0">
+                  <Button variant="outline" size="sm" onClick={() => exportCSV(contacts, "contact-submissions")}>
+                    <Download className="h-4 w-4 mr-2" /> Export CSV
+                  </Button>
+                </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -143,6 +169,11 @@ const Admin = () => {
 
             <TabsContent value="members">
               <Card>
+                <div className="flex justify-end p-4 pb-0">
+                  <Button variant="outline" size="sm" onClick={() => exportCSV(members, "membership-signups")}>
+                    <Download className="h-4 w-4 mr-2" /> Export CSV
+                  </Button>
+                </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
