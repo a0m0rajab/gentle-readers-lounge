@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookOpen, Users, Calendar, Check, ArrowRight } from "lucide-react";
+import { BookOpen, Users, Calendar, Check, ArrowRight, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ const membershipSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }).max(50),
   lastName: z.string().trim().min(1, { message: "Last name is required" }).max(50),
   email: z.string().trim().email({ message: "Please enter a valid email" }).max(255),
-  membershipType: z.enum(["reader", "explorer", "patron"], { required_error: "Please select a membership type" }),
+  membershipType: z.enum(["reader", "contributor", "organizer"], { required_error: "Please select a membership type" }),
   favoriteGenres: z.string().trim().max(500).optional(),
   howDidYouHear: z.string().trim().max(200).optional(),
   agreeToTerms: z.boolean().refine((val) => val === true, { message: "You must agree to the terms" }),
@@ -31,27 +31,28 @@ const membershipTypes = [
   {
     value: "reader",
     title: "Reader",
-    description: "Access to monthly book selections and online discussions",
+    description: "Join our monthly book selections and in-person reading discussions across Turkey",
     price: "Free",
   },
   {
-    value: "explorer",
-    title: "Explorer",
-    description: "Reader benefits plus in-person events and exclusive author talks",
-    price: "$15/month",
+    value: "contributor",
+    title: "Contributor",
+    description: "Suggest books, lead discussions, and help shape our reading list for the community",
+    price: "Free",
   },
   {
-    value: "patron",
-    title: "Patron",
-    description: "Explorer benefits plus early book access and special editions",
-    price: "$35/month",
+    value: "organizer",
+    title: "Organizer",
+    description: "Plan and host in-person meetups, author talks, and literary events in your city",
+    price: "Free",
   },
 ];
 
 const benefits = [
   { icon: BookOpen, text: "Curated monthly book selections" },
-  { icon: Users, text: "Vibrant community discussions" },
-  { icon: Calendar, text: "Exclusive member events" },
+  { icon: Users, text: "In-person meetups across Turkey" },
+  { icon: MapPin, text: "Local chapter events & gatherings" },
+  { icon: Calendar, text: "Author talks & literary festivals" },
 ];
 
 const containerVariants = {
@@ -126,8 +127,8 @@ const Membership = () => {
                 Welcome to the Club!
               </h1>
               <p className="font-body text-lg text-muted-foreground mb-8">
-                We're thrilled to have you join The Gentle Readers. Check your email 
-                for next steps and your first book recommendation.
+                We're thrilled to have you join The Gentle Readers in Turkey. Check your email 
+                for next steps, including details about upcoming meetups near you.
               </p>
               <Button
                 variant="literary"
@@ -166,8 +167,8 @@ const Membership = () => {
                 Become a Member
               </h1>
               <p className="font-body text-lg text-muted-foreground leading-relaxed">
-                Join a community of passionate readers who believe in the 
-                transformative power of stories.
+                Join our in-person reading community in Turkey. Meet fellow book lovers, 
+                share stories, and connect over great literature at local gatherings across the country.
               </p>
             </motion.div>
 
@@ -261,7 +262,7 @@ const Membership = () => {
                   <Label className="font-body text-foreground">Membership Type *</Label>
                   <RadioGroup
                     value={selectedType}
-                    onValueChange={(value) => setValue("membershipType", value as "reader" | "explorer" | "patron")}
+                    onValueChange={(value) => setValue("membershipType", value as "reader" | "contributor" | "organizer")}
                     className="space-y-3"
                   >
                     {membershipTypes.map((type) => (
@@ -272,7 +273,7 @@ const Membership = () => {
                             ? "border-accent bg-accent/5"
                             : "border-border hover:border-accent/50"
                         }`}
-                        onClick={() => setValue("membershipType", type.value as "reader" | "explorer" | "patron")}
+                        onClick={() => setValue("membershipType", type.value as "reader" | "contributor" | "organizer")}
                       >
                         <RadioGroupItem
                           value={type.value}
