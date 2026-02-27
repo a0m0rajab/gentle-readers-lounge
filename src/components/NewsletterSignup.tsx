@@ -6,6 +6,7 @@ import { Send, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const newsletterSchema = z.object({
   email: z.string().trim().email({ message: "Please enter a valid email" }).max(255),
@@ -27,9 +28,11 @@ const NewsletterSignup = () => {
   });
 
   const onSubmit = async (data: NewsletterFormData) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
+    const { error } = await supabase.from("newsletter_signups").insert({ email: data.email });
+    if (error) {
+      toast({ title: "Something went wrong", description: "Please try again later.", variant: "destructive" });
+      return;
+    }
     setIsSubmitted(true);
     toast({
       title: "Welcome to our newsletter!",

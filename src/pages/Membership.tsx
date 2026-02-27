@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const membershipSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }).max(50),
@@ -88,8 +89,18 @@ const Membership = () => {
   const agreeToTerms = watch("agreeToTerms");
 
   const onSubmit = async (data: MembershipFormData) => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
+    const { error } = await supabase.from("membership_signups").insert({
+      first_name: data.firstName,
+      last_name: data.lastName,
+      email: data.email,
+      membership_type: data.membershipType,
+      favorite_genres: data.favoriteGenres || null,
+      how_did_you_hear: data.howDidYouHear || null,
+    });
+    if (error) {
+      toast({ title: "Something went wrong", description: "Please try again later.", variant: "destructive" });
+      return;
+    }
     setIsSubmitted(true);
     toast({
       title: "Welcome to the club!",
