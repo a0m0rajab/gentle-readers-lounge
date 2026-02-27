@@ -19,6 +19,8 @@ const membershipSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }).max(50),
   lastName: z.string().trim().min(1, { message: "Last name is required" }).max(50),
   email: z.string().trim().email({ message: "Please enter a valid email" }).max(255),
+  country: z.string().trim().min(1, { message: "Country is required" }).max(100),
+  city: z.string().trim().min(1, { message: "City is required" }).max(100),
   membershipType: z.enum(["reader", "contributor", "organizer"], { required_error: "Please select a membership type" }),
   favoriteGenres: z.string().trim().max(500).optional(),
   howDidYouHear: z.string().trim().max(200).optional(),
@@ -94,6 +96,8 @@ const Membership = () => {
       first_name: data.firstName,
       last_name: data.lastName,
       email: data.email,
+      country: data.country,
+      city: data.city,
       membership_type: data.membershipType,
       favorite_genres: data.favoriteGenres || null,
       how_did_you_hear: data.howDidYouHear || null,
@@ -255,6 +259,38 @@ const Membership = () => {
                   {errors.email && (
                     <p className="text-destructive text-xs">{errors.email.message}</p>
                   )}
+                </div>
+
+                {/* Location */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country" className="font-body text-foreground">
+                      Country *
+                    </Label>
+                    <Input
+                      id="country"
+                      {...register("country")}
+                      placeholder="Turkey"
+                      className="bg-card border-border focus:border-accent"
+                    />
+                    {errors.country && (
+                      <p className="text-destructive text-xs">{errors.country.message}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="city" className="font-body text-foreground">
+                      City *
+                    </Label>
+                    <Input
+                      id="city"
+                      {...register("city")}
+                      placeholder="Istanbul"
+                      className="bg-card border-border focus:border-accent"
+                    />
+                    {errors.city && (
+                      <p className="text-destructive text-xs">{errors.city.message}</p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Membership Type */}

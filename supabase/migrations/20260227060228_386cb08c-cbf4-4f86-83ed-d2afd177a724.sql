@@ -1,0 +1,1 @@
+ALTER TABLE public.membership_signups ADD COLUMN country text, ADD COLUMN city text;
