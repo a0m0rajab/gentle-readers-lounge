@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Calendar, Copy, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { BookQuote, ReadingNote, Spoiler, ThemeTag } from "@/components/mdx/MDXComponents";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const copyToClipboard = (text: string) => navigator.clipboard.writeText(text);
@@ -281,6 +282,10 @@ const Samples = () => (
                     A styled blockquote for memorable passages. Accepts an optional <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">author</code> prop.
                   </p>
                   <CodeBlock title="Usage" code={`<BookQuote author="Author Name">\nA memorable line from the book.\n</BookQuote>`} />
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <span className="text-xs font-mono text-muted-foreground mb-2 block">Preview</span>
+                    <BookQuote author="Gabriel García Márquez">Many years later, as he faced the firing squad, Colonel Aureliano Buendía was to remember that distant afternoon when his father took him to discover ice.</BookQuote>
+                  </div>
                 </div>
 
                 <div className="p-5 rounded-xl border border-border bg-card">
@@ -289,6 +294,10 @@ const Samples = () => (
                     A callout box for tips, context, or supplementary material. Accepts an optional <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">title</code> prop.
                   </p>
                   <CodeBlock title="Usage" code={`<ReadingNote title="Historical Context">\nBackground information that enriches the reading.\n</ReadingNote>`} />
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <span className="text-xs font-mono text-muted-foreground mb-2 block">Preview</span>
+                    <ReadingNote title="Historical Context">This novel is set during the Colombian civil wars of the early 20th century. Understanding the political landscape enriches the reading experience considerably.</ReadingNote>
+                  </div>
                 </div>
 
                 <div className="p-5 rounded-xl border border-border bg-card">
@@ -297,6 +306,10 @@ const Samples = () => (
                     A collapsible section for plot reveals. Content is hidden until clicked.
                   </p>
                   <CodeBlock title="Usage" code={`<Spoiler>\nMajor plot point or ending discussion.\n</Spoiler>`} />
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <span className="text-xs font-mono text-muted-foreground mb-2 block">Preview</span>
+                    <Spoiler>The manuscript that Aureliano deciphers at the end reveals that the entire history of the Buendía family was predestined, and Macondo is destroyed by a hurricane as he finishes reading.</Spoiler>
+                  </div>
                 </div>
 
                 <div className="p-5 rounded-xl border border-border bg-card">
@@ -305,6 +318,10 @@ const Samples = () => (
                     Inline pill-style label for tagging themes.
                   </p>
                   <CodeBlock title="Usage" code={`<ThemeTag>Identity</ThemeTag>\n<ThemeTag>Community</ThemeTag>`} />
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <span className="text-xs font-mono text-muted-foreground mb-2 block">Preview</span>
+                    <div><ThemeTag>Identity</ThemeTag><ThemeTag>Community</ThemeTag><ThemeTag>Solitude</ThemeTag><ThemeTag>Memory</ThemeTag></div>
+                  </div>
                 </div>
               </div>
 
