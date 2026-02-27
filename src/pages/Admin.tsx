@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Users, Mail, MessageSquare, LogOut, Download } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Users, Mail, MessageSquare, LogOut, Download, Search } from "lucide-react";
 import { format } from "date-fns";
 
 const Admin = () => {
@@ -16,6 +17,7 @@ const Admin = () => {
   const [contacts, setContacts] = useState<any[]>([]);
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -31,6 +33,33 @@ const Admin = () => {
     };
     fetchAll();
   }, []);
+
+  const q = search.toLowerCase();
+
+  const filteredNewsletter = useMemo(
+    () => newsletter.filter((r) => r.email?.toLowerCase().includes(q)),
+    [newsletter, q]
+  );
+
+  const filteredContacts = useMemo(
+    () => contacts.filter((r) =>
+      r.name?.toLowerCase().includes(q) ||
+      r.email?.toLowerCase().includes(q) ||
+      r.message?.toLowerCase().includes(q)
+    ),
+    [contacts, q]
+  );
+
+  const filteredMembers = useMemo(
+    () => members.filter((r) =>
+      r.first_name?.toLowerCase().includes(q) ||
+      r.last_name?.toLowerCase().includes(q) ||
+      r.email?.toLowerCase().includes(q) ||
+      r.membership_type?.toLowerCase().includes(q) ||
+      r.favorite_genres?.toLowerCase().includes(q)
+    ),
+    [members, q]
+  );
 
   const formatDate = (d: string) => format(new Date(d), "MMM d, yyyy");
 
@@ -99,16 +128,27 @@ const Admin = () => {
           </div>
         ) : (
           <Tabs defaultValue="newsletter">
-            <TabsList>
-              <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
-              <TabsTrigger value="contacts">Contacts</TabsTrigger>
-              <TabsTrigger value="members">Members</TabsTrigger>
-            </TabsList>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <TabsList>
+                <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
+                <TabsTrigger value="contacts">Contacts</TabsTrigger>
+                <TabsTrigger value="members">Members</TabsTrigger>
+              </TabsList>
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search across all fields..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
 
             <TabsContent value="newsletter">
               <Card>
                 <div className="flex justify-end p-4 pb-0">
-                  <Button variant="outline" size="sm" onClick={() => exportCSV(newsletter, "newsletter-signups")}>
+                  <Button variant="outline" size="sm" onClick={() => exportCSV(filteredNewsletter, "newsletter-signups")}>
                     <Download className="h-4 w-4 mr-2" /> Export CSV
                   </Button>
                 </div>
@@ -120,14 +160,14 @@ const Admin = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {newsletter.map((r) => (
+                    {filteredNewsletter.map((r) => (
                       <TableRow key={r.id}>
                         <TableCell>{r.email}</TableCell>
                         <TableCell>{formatDate(r.created_at)}</TableCell>
                       </TableRow>
                     ))}
-                    {newsletter.length === 0 && (
-                      <TableRow><TableCell colSpan={2} className="text-center text-muted-foreground">No signups yet</TableCell></TableRow>
+                    {filteredNewsletter.length === 0 && (
+                      <TableRow><TableCell colSpan={2} className="text-center text-muted-foreground">{search ? "No results found" : "No signups yet"}</TableCell></TableRow>
                     )}
                   </TableBody>
                 </Table>
@@ -137,7 +177,7 @@ const Admin = () => {
             <TabsContent value="contacts">
               <Card>
                 <div className="flex justify-end p-4 pb-0">
-                  <Button variant="outline" size="sm" onClick={() => exportCSV(contacts, "contact-submissions")}>
+                  <Button variant="outline" size="sm" onClick={() => exportCSV(filteredContacts, "contact-submissions")}>
                     <Download className="h-4 w-4 mr-2" /> Export CSV
                   </Button>
                 </div>
@@ -151,7 +191,7 @@ const Admin = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {contacts.map((r) => (
+                    {filteredContacts.map((r) => (
                       <TableRow key={r.id}>
                         <TableCell>{r.name}</TableCell>
                         <TableCell>{r.email}</TableCell>
@@ -159,8 +199,8 @@ const Admin = () => {
                         <TableCell>{formatDate(r.created_at)}</TableCell>
                       </TableRow>
                     ))}
-                    {contacts.length === 0 && (
-                      <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No submissions yet</TableCell></TableRow>
+                    {filteredContacts.length === 0 && (
+                      <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">{search ? "No results found" : "No submissions yet"}</TableCell></TableRow>
                     )}
                   </TableBody>
                 </Table>
@@ -170,7 +210,7 @@ const Admin = () => {
             <TabsContent value="members">
               <Card>
                 <div className="flex justify-end p-4 pb-0">
-                  <Button variant="outline" size="sm" onClick={() => exportCSV(members, "membership-signups")}>
+                  <Button variant="outline" size="sm" onClick={() => exportCSV(filteredMembers, "membership-signups")}>
                     <Download className="h-4 w-4 mr-2" /> Export CSV
                   </Button>
                 </div>
@@ -186,7 +226,7 @@ const Admin = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {members.map((r) => (
+                    {filteredMembers.map((r) => (
                       <TableRow key={r.id}>
                         <TableCell>{r.first_name} {r.last_name}</TableCell>
                         <TableCell>{r.email}</TableCell>
@@ -196,8 +236,8 @@ const Admin = () => {
                         <TableCell>{formatDate(r.created_at)}</TableCell>
                       </TableRow>
                     ))}
-                    {members.length === 0 && (
-                      <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground">No signups yet</TableCell></TableRow>
+                    {filteredMembers.length === 0 && (
+                      <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground">{search ? "No results found" : "No signups yet"}</TableCell></TableRow>
                     )}
                   </TableBody>
                 </Table>
