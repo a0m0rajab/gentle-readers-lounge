@@ -21,6 +21,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Samples from "./pages/Samples";
+import Gallery from "./pages/Gallery";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/books" element={<Books />} />
             <Route path="/book/:slug" element={<BookDetail />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/event/:id" element={<EventDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/membership" element={<Membership />} />

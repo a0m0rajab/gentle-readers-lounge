@@ -14,6 +14,7 @@ const Header = () => {
     { label: "Library", href: "/books", isAnchor: false },
     { label: "Guides", href: "/guides", isAnchor: false },
     { label: "Events", href: "/events", isAnchor: false },
+    { label: "Gallery", href: "/gallery", isAnchor: false },
     { label: "About", href: "/about", isAnchor: false },
   ];
 
