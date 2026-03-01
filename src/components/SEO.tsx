@@ -41,9 +41,9 @@ const SEO = ({
   book,
   noIndex = false,
 }: SEOProps) => {
-  const fullTitle = title.includes("Gentle Readers")
+  const fullTitle = title.includes("Hadith Tech")
     ? title
-    : `${title} | The Gentle Readers Club`;
+    : `${title} | Hadith Tech`;
 
   const fullCanonicalUrl = canonicalUrl
     ? `${BASE_URL}${canonicalUrl}`
@@ -89,7 +89,7 @@ const SEO = ({
         }),
         publisher: {
           "@type": "Organization",
-          name: "The Gentle Readers Club",
+          name: "Hadith Tech",
           url: BASE_URL,
         },
       }
@@ -99,10 +99,10 @@ const SEO = ({
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "The Gentle Readers Club",
+    name: "Hadith Tech",
     url: BASE_URL,
     description:
-      "A community of passionate readers exploring literature together through monthly book discussions.",
+      "A community of tech enthusiasts exploring technology literature together through monthly book discussions.",
     sameAs: [],
   };
 

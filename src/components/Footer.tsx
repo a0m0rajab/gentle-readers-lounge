@@ -7,7 +7,7 @@ const Footer = () => {
     { name: "Instagram", href: "#", icon: InstagramIcon },
     { name: "Twitter", href: "#", icon: TwitterIcon },
     { name: "Goodreads", href: "#", icon: BookIcon },
-    { name: "Email", href: "mailto:hello@gentlereaders.club", icon: Mail },
+    { name: "Email", href: "mailto:hello@hadithtech.com", icon: Mail },
   ];
 
   const footerLinks = [
@@ -29,12 +29,12 @@ const Footer = () => {
               </div>
               <div>
                 <span className="font-serif text-lg font-semibold">
-                  The Gentle Readers
+                  Hadith Tech
                 </span>
               </div>
             </Link>
             <p className="font-body text-primary-foreground/70 text-sm leading-relaxed max-w-xs">
-              A community of passionate readers exploring literature together, 
+              A community of tech enthusiasts exploring technology literature together, 
               one page at a time.
             </p>
           </div>
@@ -88,7 +88,7 @@ const Footer = () => {
               Made with <Heart className="w-4 h-4 text-accent fill-accent" /> for book lovers
             </p>
             <p className="font-body">
-              © {new Date().getFullYear()} The Gentle Readers Club. All rights reserved.
+              © {new Date().getFullYear()} Hadith Tech. All rights reserved.
             </p>
           </div>
         </div>

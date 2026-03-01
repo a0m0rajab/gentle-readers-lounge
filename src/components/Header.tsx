@@ -29,7 +29,7 @@ const Header = () => {
             </div>
             <div className="flex flex-col">
               <span className="font-serif text-lg font-semibold text-foreground leading-tight">
-                The Gentle Readers
+                Hadith Tech
               </span>
               <span className="text-xs text-muted-foreground small-caps tracking-widest">
                 Book Club

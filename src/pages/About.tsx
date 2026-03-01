@@ -50,7 +50,7 @@ const testimonials = [
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face"
   },
   {
-    quote: "As someone who moved to a new city, The Gentle Readers gave me an instant community. These people have become some of my closest friends.",
+    quote: "As someone who moved to a new city, Hadith Tech gave me an instant community. These people have become some of my closest friends.",
     name: "David Okafor",
     role: "Member since 2021",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
@@ -99,11 +99,11 @@ const About = () => {
                 Our Story
               </span>
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mt-4 mb-6">
-                About The Gentle Readers
+                About Hadith Tech
               </h1>
               <p className="font-body text-lg text-muted-foreground leading-relaxed">
                 What began as a small gathering of friends in 2019 has blossomed into a vibrant 
-                community of literary enthusiasts united by our love of meaningful stories and 
+                community of tech enthusiasts united by our love of technology literature and 
                 thoughtful conversation.
               </p>
             </motion.div>
