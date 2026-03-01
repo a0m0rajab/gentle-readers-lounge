@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://gentlereaders.club/sitemap.xml
+Sitemap: https://book.hadithtech.com/sitemap.xml
