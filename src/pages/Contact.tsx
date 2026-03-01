@@ -8,7 +8,7 @@ const contactInfo = [
   {
     icon: Mail,
     title: "Email Us",
-    details: "hello@gentlereaders.club",
+    details: "hello@hadithtech.com",
     description: "We typically respond within 24 hours",
   },
   {
