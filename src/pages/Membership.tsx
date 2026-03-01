@@ -131,7 +131,7 @@ const Membership = () => {
                 Welcome to the Club!
               </h1>
               <p className="font-body text-lg text-muted-foreground mb-8">
-                We're thrilled to have you join The Gentle Readers in Turkey. Check your email 
+                We're thrilled to have you join Hadith Tech in Turkey. Check your email 
                 for next steps, including details about upcoming meetups near you.
               </p>
               <Button
@@ -401,7 +401,7 @@ const Membership = () => {
                     "Submitting..."
                   ) : (
                     <>
-                      Join The Gentle Readers
+                      Join Hadith Tech
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </>
                   )}

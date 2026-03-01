@@ -317,8 +317,8 @@ const Events = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                A visual journey through our book club meetings—capturing the conversations, 
-                connections, and memorable moments we've shared over great literature.
+                A visual journey through our tech book club meetings—capturing the conversations, 
+                connections, and memorable moments we've shared over great tech literature.
               </motion.p>
             </div>
           </div>

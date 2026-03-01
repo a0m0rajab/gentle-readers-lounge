@@ -68,8 +68,8 @@ const Gallery = () => {
   return (
     <>
       <SEO
-        title="Gallery | The Gentle Readers Book Club"
-        description="Browse photos from all our book club events and gatherings."
+        title="Gallery | Hadith Tech Book Club"
+        description="Browse photos from all our tech book club events and gatherings."
       />
       <Header />
       <main className="min-h-screen bg-background pt-20">
@@ -79,7 +79,7 @@ const Gallery = () => {
             Gallery
           </h1>
           <p className="text-muted-foreground font-body max-w-lg mx-auto">
-            Moments captured from our book club gatherings and discussions.
+            Moments captured from our tech book club gatherings and discussions.
           </p>
         </section>
 

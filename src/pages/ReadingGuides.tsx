@@ -38,7 +38,7 @@ const ReadingGuides = () => {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Reading Guides Collection",
-    description: "Curated reading guides from The Gentle Readers Club book discussions",
+    description: "Curated reading guides from Hadith Tech book discussions",
     numberOfItems: books.length,
     itemListElement: books.map((book, index) => ({
       "@type": "ListItem",
