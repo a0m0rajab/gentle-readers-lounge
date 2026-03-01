@@ -49,7 +49,7 @@ const ReadingGuides = () => {
         author: { "@type": "Person", name: book.author },
         genre: book.genre,
         numberOfPages: book.pageCount,
-        url: `https://gentlereaders.club/book/${book.slug}`,
+        url: `https://book.hadithtech.com/book/${book.slug}`,
       },
     })),
   };

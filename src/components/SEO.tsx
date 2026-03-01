@@ -29,7 +29,7 @@ interface SEOProps {
   noIndex?: boolean;
 }
 
-const BASE_URL = "https://gentlereaders.club";
+const BASE_URL = "https://book.hadithtech.com";
 
 const SEO = ({
   title,
