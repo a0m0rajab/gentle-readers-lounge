@@ -36,7 +36,7 @@ const Books = () => {
       <Header />
       <main className="pt-20">
         {/* Hero */}
-        <section className="py-20 md:py-24 relative">
+        <section className="py-12 md:py-16 relative">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/3 via-transparent to-transparent" />
           <div className="container mx-auto px-6 lg:px-8 relative text-center">
             <p className="small-caps text-xs tracking-[0.3em] text-accent mb-4">
@@ -123,60 +123,55 @@ const Books = () => {
         {/* Past Reads Grid */}
         <section className="py-16 pb-24">
           <div className="container mx-auto px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-              <p className="small-caps text-xs tracking-[0.3em] text-accent">
-                Past Reads
-              </p>
-              
-              {/* Search and Filter Controls */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Search Input */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Search by title or author..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 pr-9 w-full sm:w-64 bg-card border-border"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-                
-                {/* Genre Filter */}
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setSelectedGenre(null)}
-                    className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
-                      !selectedGenre
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
-                    }`}
-                  >
-                    All
-                  </button>
-                  {genres.map((genre) => (
-                    <button
-                      key={genre}
-                      onClick={() => setSelectedGenre(selectedGenre === genre ? null : genre)}
-                      className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
-                        selectedGenre === genre
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      }`}
-                    >
-                      {genre}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <p className="small-caps text-xs tracking-[0.3em] text-accent mb-6">
+              Past Reads
+            </p>
+            
+            {/* Search Input */}
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search by title or author..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 pr-9 w-full sm:w-80 bg-card border-border"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            
+            {/* Genre Filter */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <button
+                onClick={() => setSelectedGenre(null)}
+                className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                  !selectedGenre
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                All
+              </button>
+              {genres.map((genre) => (
+                <button
+                  key={genre}
+                  onClick={() => setSelectedGenre(selectedGenre === genre ? null : genre)}
+                  className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                    selectedGenre === genre
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  {genre}
+                </button>
+              ))}
             </div>
             
             {/* Results count */}
@@ -186,7 +181,7 @@ const Books = () => {
               </p>
             )}
             
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredBooks.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   <p className="text-muted-foreground">No books match your search criteria.</p>
