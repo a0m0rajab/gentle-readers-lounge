@@ -2,9 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ScrollToTop from "@/components/ScrollToTop";
+import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import Books from "./pages/Books";
 import BookDetail from "./pages/BookDetail";
@@ -25,6 +28,33 @@ import Gallery from "./pages/Gallery";
 
 const queryClient = new QueryClient();
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/books" element={<PageTransition><Books /></PageTransition>} />
+        <Route path="/book/:slug" element={<PageTransition><BookDetail /></PageTransition>} />
+        <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
+        <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+        <Route path="/event/:id" element={<PageTransition><EventDetail /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+        <Route path="/membership" element={<PageTransition><Membership /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/nominate" element={<PageTransition><Nominate /></PageTransition>} />
+        <Route path="/guides" element={<PageTransition><ReadingGuides /></PageTransition>} />
+        <Route path="/samples" element={<PageTransition><Samples /></PageTransition>} />
+        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+        <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
+        <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
+        <Route path="/admin" element={<ProtectedRoute requireAdmin><PageTransition><Admin /></PageTransition></ProtectedRoute>} />
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -32,26 +62,8 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/books" element={<Books />} />
-            <Route path="/book/:slug" element={<BookDetail />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/event/:id" element={<EventDetail />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/nominate" element={<Nominate />} />
-            <Route path="/guides" element={<ReadingGuides />} />
-            <Route path="/samples" element={<Samples />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <ScrollToTop />
+          <AnimatedRoutes />
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
