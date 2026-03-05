@@ -11,7 +11,7 @@ import EventGallery from "@/components/EventGallery";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
-
+import { getBookOgImageUrl } from "@/lib/getBookOgImageUrl";
 const BookDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const book = getBookBySlug(slug || "");
@@ -74,12 +74,15 @@ const BookDetail = () => {
     ratingCount: stats?.totalAttendees,
   };
 
+  const ogImage = getBookOgImageUrl(book);
+
   return (
     <div className="min-h-screen bg-background">
       <SEO
         title={`${book.title} by ${book.author} - Reading Guide`}
         description={seoDescription}
         canonicalUrl={`/book/${book.slug}`}
+        ogImage={ogImage}
         ogType="book"
         breadcrumbs={breadcrumbs}
         book={bookData}
