@@ -11,7 +11,31 @@ const escapeXml = (value: string) =>
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-Deno.serve((request) => {
+const getImageDataUrl = async (imageUrl: string) => {
+  try {
+    const response = await fetch(imageUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.status}`);
+    }
+
+    const contentType = response.headers.get("content-type") || "image/jpeg";
+    const bytes = new Uint8Array(await response.arrayBuffer());
+
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let index = 0; index < bytes.length; index += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+    }
+
+    return `data:${contentType};base64,${btoa(binary)}`;
+  } catch (error) {
+    console.error("Unable to inline OG cover image", error);
+    return imageUrl;
+  }
+};
+
+Deno.serve(async (request) => {
   if (request.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -23,7 +47,9 @@ Deno.serve((request) => {
   const genre = escapeXml(searchParams.get("genre") || "Tech Literature");
   const meetingDate = escapeXml(searchParams.get("meetingDate") || "Monthly discussion");
   const slug = escapeXml(searchParams.get("slug") || "book");
-  const coverImage = escapeXml(searchParams.get("coverImage") || "https://book.hadithtech.com/placeholder.svg");
+  const rawCoverImage = searchParams.get("coverImage") || "https://book.hadithtech.com/placeholder.svg";
+  const inlinedCoverImage = await getImageDataUrl(rawCoverImage);
+  const coverImage = escapeXml(inlinedCoverImage);
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
   <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
